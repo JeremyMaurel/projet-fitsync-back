@@ -2,6 +2,13 @@
 
 BEGIN;
 
--- XXX Add DDLs here.
+DROP TABLE "session";
+DROP TABLE "favorite";
+DROP TABLE "weight_tracking";
+DROP TABLE "activity";
+DROP TABLE "category";
+DROP TABLE "weight";
+DROP TABLE "request";
+DROP TABLE "user";
 
 COMMIT;
