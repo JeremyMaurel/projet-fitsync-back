@@ -2,6 +2,8 @@
 
 BEGIN;
 
+DROP INDEX idx_session_date;
+DROP INDEX idx_activity_name;
 DROP TRIGGER trigger_create_weight_tracking_entry ON "user";
 DROP FUNCTION create_weight_tracking_entry();
 DROP TABLE "session";
