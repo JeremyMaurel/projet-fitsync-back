@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
-import { router as loginRouter } from './api/loginRouter';
-import { router as signUpRouter } from './api/signUpRouter';
+import loginRouter from './api/loginRouter.js';
+import signUpRouter from './api/signUpRouter.js';
 
 const router = Router();
 

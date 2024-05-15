@@ -1,17 +1,18 @@
-import debug from 'debug';
+import debugMe from 'debug';
 import 'dotenv/config';
 import express from 'express';
-import { router } from './app/routers';
+import router from './app/routers/index.js';
 
-const app = express();
-
-app.use(express.json);
-
-app.use('/api/v1', router);
+const debug = debugMe('app:server');
 
 const PORT = process.env.PORT ?? 5000;
 
-// on lance le serveur
+const app = express();
+
+app.use(express.json());
+
+app.use('/api/v1', router);
+
 app.listen(PORT, () => {
-  debug('Listening on http://localhost:PORT');
+  debug(`Listening on http://localhost:${PORT}`);
 });
