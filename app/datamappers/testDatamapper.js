@@ -1,7 +1,7 @@
-import pool from './client.js';
+import CoreDatamapper from './utils/coreDatamapper.js';
 
-export default async function getAllCategories() {
-  const sql = 'SELECT * FROM "category"';
-  const result = await pool.query(sql);
-  return result.rows;
+export default class TestDatamapper extends CoreDatamapper {
+  static readTableName = 'category';
+
+  static writeTableName = 'category';
 }
