@@ -59,15 +59,6 @@ export default class CoreController {
     return res.status(204).json();
   }
 
-  static async getAllByUserId(req, res) {
-    debug(`[${this.entityName}] calling getAllByUserId method`);
-
-    const userId = this.getUserIdFromHeader(req, res);
-
-    const rows = await this.mainDatamapper.findAllByUserId(userId);
-    return res.json({ total: rows.length, data: rows });
-  }
-
   static getUserIdFromHeader(req, res) {
     const authHeader = req.headers.authorization;
     if (!authHeader) {

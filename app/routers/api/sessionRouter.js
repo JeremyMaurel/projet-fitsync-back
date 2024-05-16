@@ -4,6 +4,6 @@ import cw from '../../middlewares/controllerWrapper.js';
 
 const router = Router();
 
-router.get('/history', cw(sessionController.getAllByUserId.bind(sessionController)));
+router.get('/history', cw(sessionController.getAllFavoriteWithActivitiesByUserId.bind(sessionController)));
 
 export default router;

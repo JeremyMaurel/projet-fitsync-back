@@ -8,12 +8,12 @@ export default class CoreDatamapper {
   }
 
   async findAll() {
-    const result = await this.pool.query(`SELECT * FROM ${this.constructor.readTableName}`);
+    const result = await this.pool.query(`SELECT * FROM "${this.constructor.readTableName}"`);
     return result.rows;
   }
 
   async findById(id) {
-    const result = await this.pool.query(`SELECT * FROM ${this.constructor.writeTableName} WHERE id = $1`, [id]);
+    const result = await this.pool.query(`SELECT * FROM "${this.constructor.writeTableName}" WHERE id = $1`, [id]);
     return result.rows[0];
   }
 
@@ -53,16 +53,9 @@ export default class CoreDatamapper {
   }
 
   async delete(id) {
-    const result = await this.pool.query(`DELETE FROM ${this.constructor.writeTableName} WHERE id = $1`, [id]);
+    const result = await this.pool.query(`DELETE FROM "${this.constructor.writeTableName}" WHERE id = $1`, [id]);
     // Comme c'est un delete on ne renvoi pas de données.
     // Par contre on renvoi comme quoi il a bien supprimé un enregistrement
     return !!result.rowCount;
-  }
-
-  async findAllByUserId(id) {
-    const result = await this.pool.query(`
-    SELECT * FROM "${this.constructor.readTableName}"
-    WHERE "user_id" = $1`, [id]);
-    return result.rows[0];
   }
 }
