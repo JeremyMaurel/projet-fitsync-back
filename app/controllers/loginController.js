@@ -1,5 +1,3 @@
-function login(req, res) {
+export default function login(req, res) {
   res.json('Hello');
 }
-
-export default login;
