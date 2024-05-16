@@ -5,6 +5,14 @@ export default class CategoryDatamapper extends coreDatamapper {
 
   static writeTableName = 'category';
 
+  /**
+ * Finds a category and its associated activities by category ID
+ * This method retrieves a category and all its associated activities from the
+ * database table using the provided category ID. It returns the category along
+ * with an array of activities.
+ * @param {number} categoryId - The ID of the category to retrieve
+ * @returns {Object|null} - The category with its activities, or null if no category is found
+ */
   async findCategoryWithActivities(categoryId) {
     const result = await this.pool.query(`
       SELECT 
