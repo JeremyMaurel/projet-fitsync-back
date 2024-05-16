@@ -1,11 +1,20 @@
 import { Router } from 'express';
 
 import signUpRouter from './api/signUpRouter.js';
+<<<<<<< HEAD
 import testRouter from './api/testRouter.js';
+=======
+import error404 from '../middlewares/error404Handler.js';
+import errorHandler from '../middlewares/errorHandler.js';
+>>>>>>> dev
 
 const router = Router();
 
 router.use(signUpRouter);
 router.use(testRouter);
+
+router.use(error404);
+
+router.use(errorHandler);
 
 export default router;
