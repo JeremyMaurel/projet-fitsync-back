@@ -17,18 +17,23 @@ export default class CoreDatamapper {
     return result.rows[0];
   }
 
+  // Pour la fonction create, on sait qu'on enverra des json (depuis le body).
+  // Selon la table, le json n'aura pas le même nombre d'informations
+  // la table user a plus de colonne que la table category.
+  // Donc je dois pouvoir adapter la création au nombre d'infos dans le json
   async create(input) {
-    // On envoi un objet côté JS, et il est interprété sous forme de JSON côté SQL
-    /*
-      input pour catégorie : {
-        label: 'label de catégorie',
-        route: 'route de catégorie'
-      }
+    // Ici on génère la liste des colonnes et valeurs à insérer dans la requête
+    const columns = Object.keys(input).join(', '); // pseudo, mail, password
+    const values = Object.values(input); // ['Toto', 'toto@toto.fr', 'toto1023']
 
-      */
+    // Ici on génère les paramètres $1, $2 ect... pour la requête (protection injonction)
+    const placeholders = values.map((value, index) => `$${index + 1}`).join(', ');
+
+    // Enfin, on créer l'utilisateur en base de donnée en envoyant la requête.
     const result = await this.pool.query(`
-        SELECT * FROM create_${this.constructor.readTableName}($1)
-      `, [input]);
+        INSERT INTO "${this.constructor.readTableName}" (${columns})
+        VALUES (${placeholders}) RETURNING *
+      `, values);
     return result.rows[0];
   }
 

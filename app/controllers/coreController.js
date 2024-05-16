@@ -1,6 +1,9 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable max-len */
 // import ApiError from '../../errors/api.error.js';
+import debugMe from 'debug';
+
+const debug = debugMe('app:coreController');
 
 export default class CoreController {
   static entityName = null;
@@ -8,22 +11,15 @@ export default class CoreController {
   static mainDatamapper = null;
 
   static async getAll(_, res) {
+    debug(`[${this.entityName}] calling getAll method`);
+
     const rows = await this.mainDatamapper.findAll();
     return res.json({ total: rows.length, data: rows });
-    /*
-    Le fait de mettre une enveloppe me permettra demain d'ajouter facilement de la pagination et l'information qui la concerne
-    par exemple je pourrais renvoyer des propriété supplémentaires, qui contiennent l'index de la ressource du début, l'index de la ressource de fin, le nombre d'enregistrement au toal…
-    */
-    /*
-    data: […],
-    start: 10,
-    end: 20,
-    total: 345
-    */
-    // return res.json(rows);
   }
 
   static async getOne(req, res, next) {
+    debug(`[${this.entityName}] calling getOne method`);
+
     const { id } = req.params;
     const row = await this.mainDatamapper.findById(id);
     // if (!row) {
@@ -33,6 +29,7 @@ export default class CoreController {
   }
 
   static async create(req, res) {
+    debug(`[${this.entityName}] calling create method`);
     const input = req.body;
     const row = await this.mainDatamapper.create(input);
     // 201 Created
@@ -40,6 +37,7 @@ export default class CoreController {
   }
 
   static async update(req, res, next) {
+    debug(`[${this.entityName}] calling update method`);
     const { id } = req.params;
     const input = req.body;
     const row = await this.mainDatamapper.update(id, input);
@@ -50,6 +48,7 @@ export default class CoreController {
   }
 
   static async delete(req, res, next) {
+    debug(`[${this.entityName}] calling delete method`);
     const { id } = req.params;
     const deleted = await this.mainDatamapper.delete(id);
     // if (!deleted) {
