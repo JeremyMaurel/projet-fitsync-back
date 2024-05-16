@@ -58,4 +58,11 @@ export default class CoreDatamapper {
     // Par contre on renvoi comme quoi il a bien supprimé un enregistrement
     return !!result.rowCount;
   }
+
+  async findAllByUserId(id) {
+    const result = await this.pool.query(`
+    SELECT * FROM "${this.constructor.readTableName}"
+    WHERE "user_id" = $1`, [id]);
+    return result.rows[0];
+  }
 }
