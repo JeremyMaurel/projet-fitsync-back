@@ -1,10 +1,17 @@
-import debugMe from 'debug';
-import * as test from '../datamappers/testDatamapper.js';
+// import debugMe from 'debug';
+import CoreController from './coreController.js';
+import testDatamapper from '../datamappers/indexDatamapper.js';
 
-const debug = debugMe('testController');
+// const debug = debugMe('testController');
 
-export default async function getCategories(req, res) {
-  const categories = await test.default();
-  debug(categories);
-  res.json({ categories });
+export default class TestController extends CoreController {
+  static entityName = 'category';
+
+  static mainDatamapper = testDatamapper;
 }
+
+// export default async function getCategories(req, res) {
+//   const categories = await test.findAll();
+//   debug(categories);
+//   res.json({ categories });
+// }
