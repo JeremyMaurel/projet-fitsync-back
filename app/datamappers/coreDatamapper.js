@@ -13,7 +13,7 @@ export default class CoreDatamapper {
   }
 
   async findById(id) {
-    const result = await this.pool.query(`SELECT * FROM ${this.constructor.readTableName} WHERE id = $1`, [id]);
+    const result = await this.pool.query(`SELECT * FROM ${this.constructor.writeTableName} WHERE id = $1`, [id]);
     return result.rows[0];
   }
 
@@ -23,7 +23,7 @@ export default class CoreDatamapper {
   // Donc je dois pouvoir adapter la création au nombre d'infos dans le json
   async create(input) {
     // Ici on génère la liste des colonnes et valeurs à insérer dans la requête
-    const columns = Object.keys(input).join(', '); // pseudo, mail, password
+    const columns = Object.keys(input).join(', '); // 'pseudo, 'mail', 'password'
     const values = Object.values(input); // ['Toto', 'toto@toto.fr', 'toto1023']
 
     // Ici on génère les paramètres $1, $2 ect... pour la requête (protection injonction)
@@ -38,14 +38,17 @@ export default class CoreDatamapper {
   }
 
   async update(id, input) {
+    const updateColumns = Object.keys(input).join(', ');
+    const updateValues = Object.values(input);
+
+    updateValues.push(id);
+
     const result = await this.pool.query(`
-        SELECT * FROM update_${this.constructor.readTableName}($1)
-      `, [
-      {
-        ...input,
-        id,
-      },
-    ]);
+    UPDATE "${this.constructor.writeTableName}"
+    SET ${updateColumns}
+    WHERE id = $${updateValues.length}
+    RETURNING *;
+    `, updateValues);
     return result.rows[0];
   }
 
