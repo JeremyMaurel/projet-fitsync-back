@@ -2,6 +2,8 @@
 /* eslint-disable max-len */
 // import ApiError from '../../errors/api.error.js';
 import debugMe from 'debug';
+import jwt from 'jsonwebtoken';
+import getUserIdFromJWT from './getUserIdFromJwt.js';
 
 const debug = debugMe('app:coreController');
 
@@ -95,5 +97,17 @@ export default class CoreController {
     //   return next(new ApiError(404, `${this.entityName} not found`));
     // }
     return res.status(204).json();
+  }
+
+  static getUserIdFromHeader(req, res) {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      // a changer par une gestion d'erreur
+      return res.status(401).json({ message: 'JWT NON FOURNI' });
+    }
+    const userToken = authHeader.split(' ')[1];
+    const secretKey = 'prod';
+    const userId = getUserIdFromJWT(userToken, secretKey);
+    return userId;
   }
 }
