@@ -1,3 +1,4 @@
+import ApiError from '../errors/apiError.js';
 import coreDatamapper from './utils/coreDatamapper.js';
 
 export default class CategoryDatamapper extends coreDatamapper {
@@ -29,7 +30,7 @@ export default class CategoryDatamapper extends coreDatamapper {
     `, [categoryId]);
 
     if (result.rows.length === 0) {
-      return null;
+      throw new ApiError(404, 'Category not found');
     }
 
     const category = {

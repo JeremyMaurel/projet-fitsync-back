@@ -1,11 +1,12 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable max-len */
-// import ApiError from '../../errors/api.error.js';
+
 import debugMe from 'debug';
 import jwt from 'jsonwebtoken';
 import getUserIdFromJWT from './getUserIdFromJwt.js';
+import ApiError from '../../errors/apiError.js';
 
-const debug = debugMe('app:coreController');
+const debug = debugMe('off:coreController');
 
 export default class CoreController {
   static entityName = null;
@@ -21,7 +22,6 @@ export default class CoreController {
    */
   static async getAll(_, res) {
     debug(`[${this.entityName}] calling getAll method`);
-
     const rows = await this.mainDatamapper.findAll();
     return res.json({ total: rows.length, data: rows });
   }
@@ -39,26 +39,23 @@ export default class CoreController {
 
     const { id } = req.params;
     const row = await this.mainDatamapper.findById(id);
-    // if (!row) {
-    //   return next(new ApiError(404, `${this.entityName} not found`));
-    // }
+    if (!row) {
+      return next(new ApiError(404, `${this.entityName} not found`));
+    }
     return res.json({ data: row });
   }
 
   /**
    * Create a new record
-   *
    * This method creates a new record in the database using the datamapper's create method.
-   *
    * @param {Request} req - The Express request object
    * @param {Response} res - The Express response object
-   * @returns {Promise<Response>} - A JSON response with the created record
+   * @returns {Promise<Response>} - A JSON response with the created record- status 201
    */
   static async create(req, res) {
     debug(`[${this.entityName}] calling create method`);
     const input = req.body;
     const row = await this.mainDatamapper.create(input);
-    // 201 Created
     return res.status(201).json({ data: row });
   }
 
@@ -75,9 +72,9 @@ export default class CoreController {
     const { id } = req.params;
     const input = req.body;
     const row = await this.mainDatamapper.update(id, input);
-    // if (!row) {
-    //   return next(new ApiError(404, `${this.entityName} not found`));
-    // }
+    if (!row) {
+      return next(new ApiError(404, `${this.entityName} not found`));
+    }
     return res.json({ data: row });
   }
 
@@ -93,17 +90,23 @@ export default class CoreController {
     debug(`[${this.entityName}] calling delete method`);
     const { id } = req.params;
     const deleted = await this.mainDatamapper.delete(id);
-    // if (!deleted) {
-    //   return next(new ApiError(404, `${this.entityName} not found`));
-    // }
+    if (!deleted) {
+      return next(new ApiError(404, `${this.entityName} not found`));
+    }
     return res.status(204).json();
   }
 
-  static getUserIdFromHeader(req, res) {
+  /**
+ * Extracts the user ID from the JWT provided in the request headers.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @param {Function} next - The next middleware function.
+ * @returns {string|undefined} - Returns the user ID if successful, otherwise calls the next middleware with an error.
+ */
+  static getUserIdFromHeader(req, res, next) {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
-      // a changer par une gestion d'erreur
-      return res.status(401).json({ message: 'JWT NON FOURNI' });
+      return next(new ApiError(401, 'JWT NON FOURNI'));
     }
     const userToken = authHeader.split(' ')[1];
     const secretKey = 'prod';

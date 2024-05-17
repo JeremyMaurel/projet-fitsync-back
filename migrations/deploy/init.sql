@@ -31,7 +31,7 @@ CREATE TABLE "weight" (
 
 -------------------------------------------------------------
 
--- Boucle qui permet un seeding de la table weight à sa création
+-- Loop to seed the 'weight' table upon its creation
 DO $$
 DECLARE
     i DECIMAL := 0.0;
@@ -60,7 +60,7 @@ CREATE TABLE "user" (
 
 -------------------------------------------------------------
 
--- Fonction et trigger pour définir automatiquement un poids de 70 à la création de l'user
+-- Function and trigger to automatically set a default weight of 70 upon user creation
 CREATE OR REPLACE FUNCTION create_weight_tracking_entry()
 RETURNS TRIGGER AS $$
 BEGIN

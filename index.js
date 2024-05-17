@@ -8,13 +8,13 @@ import { fileURLToPath } from 'url';
 
 import router from './app/routers/index.js';
 
-// ces 3 lignes avec leurs import permettent de configurer l'environnement sur lequel on est.
-// = dev ou prod = configuré dans package json
+// These lines and their imports configure the environment
+// (dev or prod) as specified in the package.json
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, `.env.${process.env.NODE_ENV}`) });
 
-// app car configurer dans le package json
+// 'app' is specified in the package.json for configuration
 const debug = debugMe('app:server');
 
 const PORT = process.env.PORT ?? 5000;

@@ -9,6 +9,7 @@ import CategoryDatamapper from '../categoryDatamapper.js';
 import RequestDatamapper from '../requestDatamapper.js';
 import WeightTrackingDatamapper from '../weightTrackingDatamapper.js';
 
+// Initialize all datamappers with the database connection pool
 const testDatamapper = new TestDatamapper(pool);
 const userDatamapper = new UserDatamapper(pool);
 const sessionDatamapper = new SessionDatamapper(pool);
