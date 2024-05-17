@@ -26,4 +26,17 @@ export default class SessionDatamapper extends coreDatamapper {
 
     return result.rows[0];
   }
+
+  /**
+ * Deletes a session based on user ID and date.
+ * @param {number} userId - The ID of the user.
+ * @param {string} date - The date of the session in a format recognized by PostgreSQL.
+ * @throws {ApiError} - Throws an error if no session is found to delete.
+ */
+  async deleteSessionWithActivityByUserId(userId, date) {
+    const result = await this.pool.query(' DELETE FROM "session" WHERE "user_id" = $1 AND "date" = $2', [userId, date]);
+    if (result.rowCount === 0) {
+      throw new ApiError(404, 'Session entry not found');
+    }
+  }
 }

@@ -31,9 +31,12 @@ export default class FavoriteController extends CoreController {
  * @returns {Promise<void>} - Returns a promise that resolves with a 204 status on success.
  * @throws {ApiError} - Throws an error if the deletion fails.
  */
-  static async deleteFavorite(req, res) {
+  static async deleteFavorite(req, res, next) {
     const userId = this.getUserIdFromHeader(req, res);
     const { id } = req.params;
+    if (!id) {
+      return next(new ApiError(404, 'Not found'));
+    }
     await this.mainDatamapper.deleteFavoriteWithActivityByUserId(userId, id);
     return res.status(204).json();
   }

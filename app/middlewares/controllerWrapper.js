@@ -13,7 +13,7 @@ export default function cw(controller) {
     try {
       await controller(req, res, next);
     } catch (error) {
-      const apiError = new ApiError(500, error.name, error.message);
+      const apiError = new ApiError(500, error.message);
       next(apiError);
     }
   };

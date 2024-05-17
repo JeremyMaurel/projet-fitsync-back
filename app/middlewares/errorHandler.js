@@ -12,7 +12,15 @@ const debug = debugMe('app:middlewares:errorHandler');
  * @param {Function} next - The next middleware function in the Express chain
  */
 // eslint-disable-next-line no-unused-vars
-export default function errorHandler(err, request, response, next) {
+export default function errorHandler(err, req, res, next) {
   debug('Error:', err);
-  response.status(err.status).json({ status: 'error', name: err.name, message: err.message });
+
+  const statusCode = err.status || 500;
+  const message = err.message || 'Internal Server Error';
+
+  res.status(statusCode).json({
+    status: err.status,
+    name: err.name || 'Error',
+    message,
+  });
 }

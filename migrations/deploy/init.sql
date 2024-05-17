@@ -138,8 +138,8 @@ CREATE TABLE "favorite"(
 -------------------------------------------------------------
 
 CREATE TABLE "session"(
-    "duration" INTEGER,
-    "date" TIMESTAMPTZ,
+    "duration" INTEGER NOT NULL,
+    "date" TIMESTAMPTZ NOT NULL,
     "comment" VARCHAR(1024),
     "user_id" INT NOT NULL REFERENCES "user"("id"),
     "activity_id" INT NOT NULL REFERENCES "activity"("id"),

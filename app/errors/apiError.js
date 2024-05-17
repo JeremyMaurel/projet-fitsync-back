@@ -13,8 +13,8 @@ export default class ApiError extends Error {
    * @param {string} message - The error message
    */
   constructor(status, message) {
-    super();
+    super(message);
     this.status = status;
-    this.message = message;
+    this.name = this.constructor.name;
   }
 }

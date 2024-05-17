@@ -11,7 +11,7 @@ import errorHandler from '../middlewares/errorHandler.js';
 
 const router = Router();
 
-// Router principal qui récupère l'ensemble des routers pour la connexion avec Express
+// Main router that collects all the individual routers for connection with Express
 router.use(signUpRouter);
 router.use(testRouter);
 router.use(sessionRouter);
@@ -20,11 +20,11 @@ router.use(favoriteRouter);
 router.use(categoryRouter);
 router.use(activityRouter);
 
-// Utilisation du middlewares de gestion 404 si la route demandée n'est pas trouvée
+// Use middleware to handle 404 errors if the requested route is not found
 router.use(error404);
 
-// Utilisation du middleware de gestion d'erreurs qui permet d'afficher
-// le message d'erreur s'il y en a a un dans un format particulier
+// Use the error handling middleware to display error messages in a
+// specific format if any errors occur
 router.use(errorHandler);
 
 export default router;
