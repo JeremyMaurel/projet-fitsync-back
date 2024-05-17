@@ -85,7 +85,7 @@ CREATE TABLE "request" (
     "name" VARCHAR(256) NOT NULL,
     "intensity" intensities NOT NULL, 
     "met" DECIMAL(3,1) NOT NULL,
-    "user_id" INT NOT NULL REFERENCES "user"("id"),
+    "user_id" INT NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
     "created_at" TIMESTAMPTZ NOT NULL default(now()),
     "updated_at" TIMESTAMPTZ
 );
@@ -118,18 +118,18 @@ CREATE INDEX idx_activity_name ON activity (name);
 
 CREATE TABLE "weight_tracking"(
     "weight_id" INT NOT NULL REFERENCES "weight"("id"),
-    "user_id" INT NOT NULL REFERENCES "user"("id"),
+    "user_id" INT NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
     "date" TIMESTAMPTZ,
     "created_at" TIMESTAMPTZ NOT NULL default(now()),
     "updated_at" TIMESTAMPTZ,
-    CONSTRAINT "unique_weight_tracking" UNIQUE ("user_id", "date")
+    CONSTRAINT "unique_weight_tracking" UNIQUE ("user_id", "date") 
 );
 
 -------------------------------------------------------------
 
 CREATE TABLE "favorite"(
     "activity_id" INT NOT NULL REFERENCES "activity"("id"),
-    "user_id" INT NOT NULL REFERENCES "user"("id"),
+    "user_id" INT NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
     "created_at" TIMESTAMPTZ NOT NULL default(now()),
     "updated_at" TIMESTAMPTZ,
     CONSTRAINT "unique_favorite" UNIQUE("activity_id", "user_id")
@@ -141,7 +141,7 @@ CREATE TABLE "session"(
     "duration" INTEGER NOT NULL,
     "date" TIMESTAMPTZ NOT NULL,
     "comment" VARCHAR(1024),
-    "user_id" INT NOT NULL REFERENCES "user"("id"),
+    "user_id" INT NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
     "activity_id" INT NOT NULL REFERENCES "activity"("id"),
     "created_at" TIMESTAMPTZ NOT NULL default(now()),
     "updated_at" TIMESTAMPTZ,
