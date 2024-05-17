@@ -1,0 +1,21 @@
+==> if you have a superadmin config with PostgreSQL:
+
+[core]
+	engine = pg
+	plan_file = migrations/sqitch.plan
+	top_dir = migrations
+ [engine "pg"]
+	 target = db:pg:fitsync
+	# registry = sqitch
+	# client = psql
+
+==> if not:
+
+[core]
+	engine = pg
+	plan_file = migrations/sqitch.plan
+	top_dir = migrations
+ [engine "pg"]
+	 target = db:pg://nomDuLutilisateur:motDePasse@localhost/nomDeLaBase
+	# registry = sqitch
+	client = psql
