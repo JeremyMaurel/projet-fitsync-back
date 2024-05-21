@@ -40,7 +40,7 @@ export default class CoreController {
     const { id } = req.params;
     const row = await this.mainDatamapper.findById(id);
     if (!row) {
-      return next(new ApiError(404, `${this.entityName} not found`));
+      return next(new ApiError(404, 'Api Error', `${this.entityName} not found`));
     }
     return res.json({ data: row });
   }
@@ -73,7 +73,7 @@ export default class CoreController {
     const input = req.body;
     const row = await this.mainDatamapper.update(id, input);
     if (!row) {
-      return next(new ApiError(404, `${this.entityName} not found`));
+      return next(new ApiError(404, 'Api Error', `${this.entityName} not found`));
     }
     return res.json({ data: row });
   }
@@ -91,7 +91,7 @@ export default class CoreController {
     const { id } = req.params;
     const deleted = await this.mainDatamapper.delete(id);
     if (!deleted) {
-      return next(new ApiError(404, `${this.entityName} not found`));
+      return next(new ApiError(404, 'Api Error', `${this.entityName} not found`));
     }
     return res.status(204).json();
   }
@@ -106,7 +106,7 @@ export default class CoreController {
   static getUserIdFromHeader(req, res, next) {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
-      return next(new ApiError(401, 'JWT NON FOURNI'));
+      return next(new ApiError(401, 'Api Error', 'JWT NON FOURNI'));
     }
     const userToken = authHeader.split(' ')[1];
     const secretKey = 'prod';

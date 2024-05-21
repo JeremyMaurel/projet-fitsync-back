@@ -18,7 +18,7 @@ export default class UserController extends CoreController {
     const userId = this.getUserIdFromHeader(req, res);
     const row = await this.mainDatamapper.findById(userId);
     if (!row) {
-      return next(new ApiError(404, 'User not found'));
+      return next(new ApiError(404, 'Error', 'User not found'));
     }
     return res.json({ data: row });
   }
@@ -36,7 +36,7 @@ export default class UserController extends CoreController {
     const userDeleted = await this.mainDatamapper.delete(userId);
 
     if (!userDeleted) {
-      throw new ApiError(404, 'User not found');
+      throw new ApiError(404, 'Error', 'User not found');
     }
 
     return res.status(204).json();

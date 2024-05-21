@@ -10,5 +10,5 @@ import ApiError from '../errors/apiError.js';
  * @param {Function} next - The next middleware function in the Express chain
  */
 export default function error404(_, __, next) {
-  next(new ApiError(404, 'Not found'));
+  next(new ApiError(404, 'Error404', 'Not found'));
 }

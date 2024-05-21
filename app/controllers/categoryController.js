@@ -21,7 +21,7 @@ export default class CategoryController extends CoreController {
     const { categoryId } = req.params;
     const category = await this.mainDatamapper.findCategoryWithActivities(categoryId);
     if (!category) {
-      return next(new ApiError(404, 'Category not found'));
+      return next(new ApiError(404, 'Error', 'Category not found'));
     }
     return res.json({ data: category });
   }

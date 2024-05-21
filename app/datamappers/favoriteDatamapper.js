@@ -21,7 +21,7 @@ export default class FavoriteDatamapper extends coreDatamapper {
     WHERE "user_id" = $1`, [id]);
 
     if (result.rows.length === 0) {
-      throw new ApiError(404, 'No favorite activities found for this user');
+      throw new ApiError(404, 'Error', 'No favorite activities found for this user');
     }
 
     return result.rows[0];
@@ -36,7 +36,7 @@ export default class FavoriteDatamapper extends coreDatamapper {
   async deleteFavoriteWithActivityByUserId(userId, activityId) {
     const result = await this.pool.query(' DELETE FROM "favorite" WHERE "user_id" = $1 AND "activity_id" = $2', [userId, activityId]);
     if (result.rowCount === 0) {
-      throw new ApiError(404, 'Favorite entry not found');
+      throw new ApiError(404, 'Error', 'Favorite entry not found');
     }
   }
 }

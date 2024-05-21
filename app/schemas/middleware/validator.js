@@ -13,8 +13,9 @@ export default function validator(schema, source) {
     const { error } = schema.validate(request[source]);
     if (error) {
       const apiError = new ApiError(400, error.name, error.message);
-      next(apiError);
+      return next(apiError);
     }
     next();
+    return undefined;
   };
 }

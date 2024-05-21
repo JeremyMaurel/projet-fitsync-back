@@ -10,7 +10,7 @@ const checkById = (checks) => async (req, res, next) => {
       }
       const row = await modelInstance.findById(id);
       if (!row) {
-        throw new ApiError(404, `${entityName} not found`);
+        throw new ApiError(404, 'Api Error', `${entityName} not found`);
       }
       req[entityName.toLowerCase()] = row;
     });

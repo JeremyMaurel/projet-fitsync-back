@@ -21,7 +21,7 @@ export default class SessionDatamapper extends coreDatamapper {
     WHERE "user_id" = $1`, [id]);
 
     if (result.rows.length === 0) {
-      throw new ApiError(404, 'No sessions found for this user');
+      throw new ApiError(404, 'Error', 'No sessions found for this user');
     }
 
     return result.rows[0];
@@ -36,7 +36,7 @@ export default class SessionDatamapper extends coreDatamapper {
   async deleteSessionWithActivityByUserId(userId, date) {
     const result = await this.pool.query(' DELETE FROM "session" WHERE "user_id" = $1 AND "date" = $2', [userId, date]);
     if (result.rowCount === 0) {
-      throw new ApiError(404, 'Session entry not found');
+      throw new ApiError(404, 'Error', 'Session entry not found');
     }
   }
 }
