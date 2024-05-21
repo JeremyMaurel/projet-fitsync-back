@@ -2,6 +2,7 @@
 import debugMe from 'debug';
 import dotenv from 'dotenv';
 import express from 'express';
+import cors from 'cors';
 
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -20,6 +21,8 @@ const debug = debugMe('app:server');
 const PORT = process.env.PORT ?? 5000;
 
 const app = express();
+
+app.use(cors({ origin: process.env.CORS_ORIGIN }));
 
 app.use(express.json());
 
