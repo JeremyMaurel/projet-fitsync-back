@@ -22,4 +22,23 @@ export default class UserController extends CoreController {
     }
     return res.json({ data: row });
   }
+
+  /**
+ * Deletes the user's account.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Promise<void>} - Returns a promise that resolves with a 204 status on success.
+ * @throws {ApiError} - Throws an error if the user is not found.
+ */
+  static async deleteAccount(req, res) {
+    const userId = this.getUserIdFromHeader(req, res);
+
+    const userDeleted = await this.mainDatamapper.delete(userId);
+
+    if (!userDeleted) {
+      throw new ApiError(404, 'User not found');
+    }
+
+    return res.status(204).json();
+  }
 }

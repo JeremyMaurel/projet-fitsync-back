@@ -26,4 +26,17 @@ export default class FavoriteDatamapper extends coreDatamapper {
 
     return result.rows[0];
   }
+
+  /**
+ * Deletes a favorite entry based on user ID and activity ID.
+ * @param {number} userId - The ID of the user.
+ * @param {number} activityId - The ID of the activity.
+ * @throws {ApiError} - Throws an error if no favorite entry is found to delete.
+ */
+  async deleteFavoriteWithActivityByUserId(userId, activityId) {
+    const result = await this.pool.query(' DELETE FROM "favorite" WHERE "user_id" = $1 AND "activity_id" = $2', [userId, activityId]);
+    if (result.rowCount === 0) {
+      throw new ApiError(404, 'Favorite entry not found');
+    }
+  }
 }

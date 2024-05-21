@@ -23,4 +23,21 @@ export default class FavoriteController extends CoreController {
     }
     return res.json({ total: rows.length, data: rows });
   }
+
+  /**
+ * Deletes a favorite entry based on user ID and activity ID from the request.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Promise<void>} - Returns a promise that resolves with a 204 status on success.
+ * @throws {ApiError} - Throws an error if the deletion fails.
+ */
+  static async deleteFavorite(req, res, next) {
+    const userId = this.getUserIdFromHeader(req, res);
+    const { ActivityId } = req.params;
+    if (!ActivityId) {
+      return next(new ApiError(404, 'Not found'));
+    }
+    await this.mainDatamapper.deleteFavoriteWithActivityByUserId(userId, ActivityId);
+    return res.status(204).json();
+  }
 }
