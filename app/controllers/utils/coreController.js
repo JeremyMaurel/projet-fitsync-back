@@ -97,20 +97,19 @@ export default class CoreController {
   }
 
   /**
- * Extracts the user ID from the JWT provided in the request headers.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
- * @param {Function} next - The next middleware function.
- * @returns {string|undefined} - Returns the user ID if successful, otherwise calls the next middleware with an error.
- */
+   * Extracts the user ID from the JWT provided in the request headers.
+   * @param {Object} req - The request object.
+   * @param {Object} res - The response object.
+   * @param {Function} next - The next middleware function.
+   * @returns {string|undefined} - Returns the user ID if successful, otherwise calls the next middleware with an error.
+   */
   static getUserIdFromHeader(req, res, next) {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
       return next(new ApiError(401, 'Api Error', 'JWT NON FOURNI'));
     }
     const userToken = authHeader.split(' ')[1];
-    const secretKey = 'prod';
-    const userId = getUserIdFromJWT(userToken, secretKey);
+    const userId = getUserIdFromJWT(userToken);
     return userId;
   }
 }

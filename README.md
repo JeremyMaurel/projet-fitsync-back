@@ -14,15 +14,15 @@ sudo -i -u postgres psql
 
 -- Créer un utilisateur
 CREATE USER nomDuLutilisateur WITH PASSWORD 'motDePasse';
-CREATE USER trombi WITH PASSWORD 'trombi';
+exemple : CREATE USER trombi WITH PASSWORD 'trombi';
 
 -- Créer la BDD
 CREATE DATABASE nomDeLaBase OWNER nomDuLutilisateur;
-CREATE DATABASE trombi OWNER trombi;
+exemple : CREATE DATABASE trombi OWNER trombi;
 
 -- Tester la connexion
 psql -U nomDeLutilisateur -d nomDeLaBase
-psql -U trombi -d trombi
+exemple : psql -U trombi -d trombi
 ```
 
 3. configurer `sqitch.conf`:
