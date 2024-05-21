@@ -33,11 +33,11 @@ export default class FavoriteController extends CoreController {
  */
   static async deleteFavorite(req, res, next) {
     const userId = this.getUserIdFromHeader(req, res);
-    const { id } = req.params;
-    if (!id) {
+    const { ActivityId } = req.params;
+    if (!ActivityId) {
       return next(new ApiError(404, 'Not found'));
     }
-    await this.mainDatamapper.deleteFavoriteWithActivityByUserId(userId, id);
+    await this.mainDatamapper.deleteFavoriteWithActivityByUserId(userId, ActivityId);
     return res.status(204).json();
   }
 }

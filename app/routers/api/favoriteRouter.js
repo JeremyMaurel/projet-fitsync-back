@@ -26,6 +26,6 @@ router.get('/favorites', cw(favoriteController.getAllFavoriteWithActivitiesByUse
  * @return {ApiJsonError} 404 - Not Found - Favorite entry not found
  * @return {ApiJsonError} 500 - Internal Server Error - Unexpected error
  */
-router.delete('/favorites/:id', cw(favoriteController.deleteFavorite.bind(favoriteController)));
+router.delete('/favorites/:ActivityId', cw(favoriteController.deleteFavorite.bind(favoriteController)));
 
 export default router;
