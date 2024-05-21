@@ -5,7 +5,7 @@
 	plan_file = migrations/sqitch.plan
 	top_dir = migrations
  [engine "pg"]
-	 target = db:pg:fitsync
+	 target = db:pg:nomDeLaBase
 	# registry = sqitch
 	# client = psql
 

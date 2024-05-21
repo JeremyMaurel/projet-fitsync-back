@@ -1,3 +1,5 @@
+import ApiError from '../../errors/apiError.js';
+
 export default class CoreDatamapper {
   static readTableName = null;
 
@@ -20,6 +22,9 @@ export default class CoreDatamapper {
  */
   async findAll() {
     const result = await this.pool.query(`SELECT * FROM "${this.constructor.readTableName}"`);
+    if (result.rows.length === 0) {
+      throw new ApiError(404, 'No records found');
+    }
     return result.rows;
   }
 
@@ -34,6 +39,9 @@ export default class CoreDatamapper {
  */
   async findById(id) {
     const result = await this.pool.query(`SELECT * FROM "${this.constructor.writeTableName}" WHERE id = $1`, [id]);
+    if (result.rows.length === 0) {
+      throw new ApiError(404, 'Record not found');
+    }
     return result.rows[0];
   }
 
@@ -45,18 +53,24 @@ export default class CoreDatamapper {
  * @returns {Object} - The newly created record
  */
   async create(input) {
-  // Pour la fonction create, on sait qu'on enverra des json (depuis le body).
-  // Selon la table, le json n'aura pas le même nombre d'informations
-  // la table user a plus de colonne que la table category.
-  // Donc je dois pouvoir adapter la création au nombre d'infos dans le json
-    // Ici on génère la liste des colonnes et valeurs à insérer dans la requête
+  // For the create function, we know that JSON data will be sent (from the body).
+  // Depending on the table, the JSON will have a different number of fields.
+  // For example, the user table has more columns than the category table.
+  // Therefore, I need to adapt the creation process to the number of fields in the JSON.
+
+    // Ensure input is not empty
+    if (!input || Object.keys(input).length === 0) {
+      throw new ApiError(400, 'No data provided for creation');
+    }
+
+    // Generate the list of columns and values to insert into the query
     const columns = Object.keys(input).join(', '); // 'pseudo, 'mail', 'password'
     const values = Object.values(input); // ['Toto', 'toto@toto.fr', 'toto1023']
 
-    // Ici on génère les paramètres $1, $2 ect... pour la requête (protection injonction)
+    // Generate the placeholders $1, $2, etc., for the query (SQL injection protection)
     const placeholders = values.map((value, index) => `$${index + 1}`).join(', ');
 
-    // Enfin, on créer l'utilisateur en base de donnée en envoyant la requête.
+    // Finally, create the record in the database by executing the query
     const result = await this.pool.query(`
         INSERT INTO "${this.constructor.readTableName}" (${columns})
         VALUES (${placeholders}) RETURNING *
@@ -85,6 +99,10 @@ export default class CoreDatamapper {
     WHERE id = $${updateValues.length}
     RETURNING *;
     `, updateValues);
+
+    if (result.rows.length === 0) {
+      throw new ApiError(404, 'Record not found');
+    }
     return result.rows[0];
   }
 
@@ -97,8 +115,8 @@ export default class CoreDatamapper {
  */
   async delete(id) {
     const result = await this.pool.query(`DELETE FROM "${this.constructor.writeTableName}" WHERE id = $1`, [id]);
-    // Comme c'est un delete on ne renvoi pas de données.
-    // Par contre on renvoi comme quoi il a bien supprimé un enregistrement
+    // Since it's a delete operation, we don't return any data.
+    // However, we return a boolean indicating whether a record was successfully deleted.
     return !!result.rowCount;
   }
 }
