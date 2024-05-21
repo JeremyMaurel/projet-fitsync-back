@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import signUpRouter from './api/signUpRouter.js';
 import testRouter from './api/testRouter.js';
 import sessionRouter from './api/sessionRouter.js';
 import userRouter from './api/userRouter.js';
@@ -13,7 +12,6 @@ import errorHandler from '../middlewares/errorHandler.js';
 const router = Router();
 
 // Main router that collects all the individual routers for connection with Express
-router.use(signUpRouter);
 router.use(testRouter);
 router.use(sessionRouter);
 router.use(userRouter);

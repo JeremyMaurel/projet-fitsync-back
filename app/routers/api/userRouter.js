@@ -1,8 +1,12 @@
 import { Router } from 'express';
 import userController from '../../controllers/userController.js';
 import cw from '../../middlewares/controllerWrapper.js';
+import validator from '../../schemas/middleware/validator.js';
+import userCreateSchema from '../../schemas/userCreateSchema.js';
 
 const router = Router();
+
+router.route('/user')
 
 /**
  * GET /user
@@ -14,7 +18,7 @@ const router = Router();
  * @return {ApiJsonError} 404 - Not Found - application/json
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
-router.get('/user', cw(userController.getUserByJWT.bind(userController)));
+  .get(cw(userController.getUserByJWT.bind(userController)))
 
 /**
  * @route DELETE /user
@@ -25,5 +29,21 @@ router.get('/user', cw(userController.getUserByJWT.bind(userController)));
  * @return {404} 404 - Not Found - User not found
  * @return {500} 500 - Internal Server Error - Unexpected error
  */
-router.delete('/user', cw(userController.deleteAccount.bind(userController)));
+  .delete(cw(userController.deleteAccount.bind(userController)));
+
+/**
+ * @route POST /signup
+ * @summary Create a new user account
+ * @tags Users
+ * @param {object} request.body.required - The user data - application/json
+ * @param {string} request.body.mail - The email of the user
+ * @param {string} request.body.pseudo - The pseudo of the user
+ * @param {string} request.body.role - The role of the user (default: 'user')
+ * @param {string} request.body.password - The password of the user
+ * @return {201} 201 - Created - Successfully created the user
+ * @return {400} 400 - Bad Request - Validation error
+ * @return {500} 500 - Internal Server Error - Unexpected error
+ */
+router.post('/signup', validator(userCreateSchema, 'body'), cw(userController.createUserWithHashedPassword.bind(userController)));
+
 export default router;

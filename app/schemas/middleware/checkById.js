@@ -11,7 +11,7 @@ import ApiError from '../../errors/apiError.js';
  * @param {string} checks[].entityName - The name of the entity to check (e.g., 'User').
  * @returns {Function} Middleware function to use in Express routes.
  */
-const checkById = (checks) => async (req, res, next) => {
+export default (checks) => async (req, res, next) => {
   try {
     const promises = checks.map(async (check) => {
       const { modelInstance, idKey, entityName } = check;
@@ -31,5 +31,3 @@ const checkById = (checks) => async (req, res, next) => {
     next(error);
   }
 };
-
-export default checkById;
