@@ -36,12 +36,15 @@ export default class SessionController extends CoreController {
  */
   static async deleteSession(req, res, next) {
     const userId = req.user.id;
-    const { date } = req.query;
+    const { date } = req.body;
+
+    const session = await this.mainDatamapper.findSessionByDateAndUserId(date, userId);
+    if (!session) { return next(new ApiError(404, 'Error', 'Session not found')); }
 
     if (!date) {
       return next(new ApiError(404, 'Error', 'Date not provided'));
     }
-    await this.mainDatamapper.deleteSessionWithActivityByUserId(userId, date);
+    await this.mainDatamapper.deleteSessionByDateAndUserId(userId, date);
     return res.status(204).json();
   }
 
@@ -52,28 +55,29 @@ export default class SessionController extends CoreController {
    * @param {number} req.body.duration - The duration of the session in minutes.
    * @param {string} req.body.date - The date of the session.
    * @param {string} req.body.comment - A comment or note about the session.
-   * @param {number} req.body.activity_id - The ID of the activity associated with the session.
+   * @param {number} req.body.activityId - The ID of the activity associated with the session.
    * @param {object} res - The Express response object.
    * @returns {Promise<void>}
    * A promise that resolves to sending a JSON response with the created session.
    * @throws {ApiError} - Throws an error if the session creation fails.
    */
-
-  static async createSessionByUserLogged(req, res) {
+  static async createSession(req, res, next) {
     const {
-      duration, date, comment, activity_id,
+      duration, date, comment, activityId,
     } = req.body;
     const userId = req.user.id;
 
-    // Verify if activity_id exists. Error handled in the datamapper.
-    await datamappers.activityDatamapper.findById(activity_id);
+    const activity = await datamappers.activityDatamapper.findById(activityId);
+    if (!activity) {
+      return next(new ApiError(404, 'Error', 'Activity not found'));
+    }
 
     const newSession = await this.mainDatamapper.create({
       duration,
       date,
       comment,
       user_id: userId,
-      activity_id,
+      activity_id: activityId,
     });
     return res.status(201).json({ data: newSession });
   }

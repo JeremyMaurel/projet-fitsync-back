@@ -1,4 +1,3 @@
-import ApiError from '../errors/apiError.js';
 import coreDatamapper from './utils/coreDatamapper.js';
 
 export default class CategoryDatamapper extends coreDatamapper {
@@ -28,10 +27,6 @@ export default class CategoryDatamapper extends coreDatamapper {
       LEFT JOIN "activity" a ON c.id = a.category_id
       WHERE c.id = $1
     `, [categoryId]);
-
-    if (result.rows.length === 0) {
-      throw new ApiError(404, 'Error', 'Category not found');
-    }
 
     const category = {
       id: result.rows[0].category_id,

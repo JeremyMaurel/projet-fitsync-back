@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import CoreController from './utils/coreController.js';
 
 import datamappers from '../datamappers/utils/indexDatamapper.js';
@@ -33,11 +34,45 @@ export default class FavoriteController extends CoreController {
  */
   static async deleteFavorite(req, res, next) {
     const userId = req.user.id;
-    const { ActivityId } = req.params;
-    if (!ActivityId) {
-      return next(new ApiError(404, 'Error', 'Not found'));
+    const { activityId } = req.params;
+
+    const favorite = await this.mainDatamapper.findFavoriteByaAndUserId(activityId, userId);
+    if (!favorite) {
+      return next(new ApiError(404, 'Error', 'Favorite not found'));
     }
-    await this.mainDatamapper.deleteFavoriteWithActivityByUserId(userId, ActivityId);
+
+    await this.mainDatamapper.deleteFavoriteByActivityAndUserId(userId, activityId);
     return res.status(204).json();
+  }
+
+  /**
+ * Creates a favorite entry based on user ID and activity ID from the request.
+ * @param {Object} req - The request object.
+ * @param {Object} req.body - The request body containing the activity ID.
+ * @param {number} req.body.activityId - The ID of the activity to be favorited.
+ * @param {Object} res - The response object.
+ * @param {Function} next - The next middleware function.
+ * @returns {Promise<void>} - Returns a promise that resolves with the created favorite entry and a 201 status on success.
+ * @throws {ApiError} - Throws an error if the creation fails or if the favorite already exists.
+ */
+  static async createFavorite(req, res, next) {
+    const { activityId } = req.body;
+    const userId = req.user.id;
+
+    const activity = await datamappers.activityDatamapper.findById(activityId);
+    if (!activity) {
+      return next(new ApiError(404, 'Error', 'Activity not found'));
+    }
+
+    const existingFavorite = await this.mainDatamapper.findFavoriteByActivityIdAndUserId(activityId, userId);
+
+    if (existingFavorite) {
+      return next(new ApiError(409, 'Conflit', 'Favorite already exists'));
+    }
+    const newFavorite = await this.mainDatamapper.create({
+      user_id: userId,
+      activity_id: activityId,
+    });
+    return res.status(201).json({ data: newFavorite });
   }
 }

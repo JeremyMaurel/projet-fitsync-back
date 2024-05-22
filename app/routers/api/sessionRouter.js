@@ -50,6 +50,6 @@ router.delete('/session-history', validateToken, cw(sessionController.deleteSess
  * @return {404} 404 - Not Found - User or activity not found
  * @return {500} 500 - Internal Server Error - Unexpected error
  */
-router.post('/session', validateToken, validator(sessionCreateSchema, 'body'), cw(sessionController.createSessionByUserLogged.bind(sessionController)));
+router.post('/session', validateToken, validator(sessionCreateSchema, 'body'), cw(sessionController.createSession.bind(sessionController)));
 
 export default router;

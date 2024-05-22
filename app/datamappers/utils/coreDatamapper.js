@@ -1,5 +1,3 @@
-import ApiError from '../../errors/apiError.js';
-
 export default class CoreDatamapper {
   static readTableName = null;
 
@@ -22,9 +20,6 @@ export default class CoreDatamapper {
  */
   async findAll() {
     const result = await this.pool.query(`SELECT * FROM "${this.constructor.readTableName}"`);
-    if (result.rows.length === 0) {
-      throw new ApiError(404, 'Api Error', `${this.constructor.writeTableName} not found`);
-    }
     return result.rows;
   }
 
@@ -39,9 +34,6 @@ export default class CoreDatamapper {
  */
   async findById(id) {
     const result = await this.pool.query(`SELECT * FROM "${this.constructor.writeTableName}" WHERE id = $1`, [id]);
-    if (result.rows.length === 0) {
-      throw new ApiError(404, 'Api Error', `${this.constructor.writeTableName} not found`);
-    }
     return result.rows[0];
   }
 
@@ -57,11 +49,6 @@ export default class CoreDatamapper {
   // Depending on the table, the JSON will have a different number of fields.
   // For example, the user table has more columns than the category table.
   // Therefore, I need to adapt the creation process to the number of fields in the JSON.
-
-    // Ensure input is not empty
-    if (!input || Object.keys(input).length === 0) {
-      throw new ApiError(400, 'No data provided for creation');
-    }
 
     // Generate the list of columns and values to insert into the query
     const columns = Object.keys(input).join(', '); // 'pseudo, 'mail', 'password'
@@ -100,9 +87,6 @@ export default class CoreDatamapper {
     RETURNING *;
     `, updateValues);
 
-    if (result.rows.length === 0) {
-      throw new ApiError(404, 'Api Error', `${this.constructor.writeTableName} not found`);
-    }
     return result.rows[0];
   }
 
