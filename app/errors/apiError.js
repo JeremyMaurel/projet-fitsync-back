@@ -12,9 +12,9 @@ export default class ApiError extends Error {
    * @param {number} status - The HTTP status code associated with the error
    * @param {string} message - The error message
    */
-  constructor(status, message) {
+  constructor(status, name, message) {
     super(message);
     this.status = status;
-    this.name = this.constructor.name;
+    this.name = name;
   }
 }

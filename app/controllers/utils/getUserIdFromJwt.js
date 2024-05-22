@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken';
  * @returns {string} - The user ID extracted from the JWT.
  * @throws {Error} - Throws an error if the token is invalid or verification fails.
  */
-export default function getUserIdFromJWT(token, secretKey) {
-  const decoded = jwt.verify(token, secretKey);
+export default function getUserIdFromJWT(token) {
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
   return decoded.userId;
 }
