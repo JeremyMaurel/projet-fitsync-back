@@ -12,10 +12,6 @@ export default Joi.object({
     'string.max': 'Pseudo must not exceed 24 characters.',
     'any.required': 'Pseudo is required.',
   }),
-  role: Joi.string().valid('user', 'admin').default('user').messages({
-    'string.base': 'Role must be a string.',
-    'any.only': 'Role must be one of specified',
-  }),
   password: Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/).required().messages({
     'string.pattern.base': 'Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
     'any.required': 'Password is required.',

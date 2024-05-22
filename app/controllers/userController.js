@@ -77,7 +77,7 @@ export default class UserController extends CoreController {
   // eslint-disable-next-line consistent-return
   static async createUserWithHashedPassword(req, res, next) {
     const {
-      password, mail, pseudo, role,
+      password, mail, pseudo,
     } = req.body;
 
     const existingUserByEmail = await this.mainDatamapper.findByEmail(mail);
@@ -93,7 +93,7 @@ export default class UserController extends CoreController {
     const saltRounds = parseInt(process.env.SALT_ROUNDS, 10);
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     const newUser = await this.mainDatamapper.create({
-      mail, pseudo, role, password: `${hashedPassword}`,
+      mail, pseudo, password: `${hashedPassword}`,
     });
     res.status(201).json(newUser);
   }

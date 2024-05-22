@@ -3,10 +3,10 @@ import cw from '../../middlewares/controllerWrapper.js';
 import RequestController from '../../controllers/requestController.js';
 import validator from '../../schemas/middleware/validator.js';
 import requestsCreateSchema from '../../schemas/requestsCreateSchema.js';
-import checkById from '../../schemas/middleware/checkById.js';
-import datamappers from '../../datamappers/utils/indexDatamapper.js';
+// import checkById from '../../schemas/middleware/checkById.js';
+// import datamappers from '../../datamappers/utils/indexDatamapper.js';
 
-const { userDatamapper } = datamappers;
+// const { userDatamapper } = datamappers;
 
 const router = Router();
 
@@ -22,6 +22,6 @@ const router = Router();
  * @return {ApiJsonError} 404 - Not Found - application/json
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
-router.post('/requests', validator(requestsCreateSchema, 'body'), checkById([{ modelInstance: userDatamapper, idKey: 'user_id', entityName: 'User' }]), cw(RequestController.create.bind(RequestController)));
-
+router.post('/requests', validator(requestsCreateSchema, 'body'), cw(RequestController.createRequestByUserLogged.bind(RequestController)));
+// checkById([{ modelInstance: userDatamapper, idKey: 'user_id', entityName: 'User' }]),
 export default router;

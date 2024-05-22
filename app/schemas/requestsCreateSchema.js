@@ -21,9 +21,4 @@ export default Joi.object({
       'number.max': 'MET exceeds the maximum value',
       'any.required': 'MET is required',
     }),
-  user_id: Joi.number().integer().required().messages({
-    'number.base': 'Invalid input type for user ID',
-    'number.integer': 'User ID must be a number',
-    'any.required': 'User ID is required',
-  }),
 });
