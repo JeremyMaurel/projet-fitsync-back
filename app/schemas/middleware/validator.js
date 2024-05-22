@@ -8,7 +8,7 @@ import ApiError from '../../errors/apiError.js';
  * @param {string} source - The part of the request to validate ('body', 'params', 'query', etc.).
  * @returns {Function} Express middleware that validates the request.
  */
-export default function validate(schema, source) {
+export default function validator(schema, source) {
   return (request, response, next) => {
     const { error } = schema.validate(request[source]);
     if (error) {

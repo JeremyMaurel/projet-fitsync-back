@@ -13,7 +13,7 @@ export default function createToken() {
   const secretKey = 'prod';
 
   const token = jwt.sign(payload, secretKey);
-  console.log(token);
+
   return token;
 }
 

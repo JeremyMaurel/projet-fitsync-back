@@ -2,6 +2,8 @@
 import { Router } from 'express';
 import sessionController from '../../controllers/sessionController.js';
 import cw from '../../middlewares/controllerWrapper.js';
+import validator from '../../schemas/middleware/validator.js';
+import createSchema from '../../schemas/sessionSchema.js';
 
 const router = Router();
 
@@ -45,6 +47,6 @@ router.delete('/session-history', cw(sessionController.deleteSession.bind(sessio
  * @return {404} 404 - Not Found - User or activity not found
  * @return {500} 500 - Internal Server Error - Unexpected error
  */
-router.post('/session', cw(sessionController.create.bind(sessionController)));
+router.post('/session', validator(createSchema, 'body'), cw(sessionController.create.bind(sessionController)));
 
 export default router;
