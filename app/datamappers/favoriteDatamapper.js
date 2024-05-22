@@ -1,5 +1,4 @@
 /* eslint-disable max-len */
-import ApiError from '../errors/apiError.js';
 import coreDatamapper from './utils/coreDatamapper.js';
 
 export default class FavoriteDatamapper extends coreDatamapper {
@@ -11,7 +10,6 @@ export default class FavoriteDatamapper extends coreDatamapper {
  * Finds all favorite activities with their details for a given user ID.
  * @param {number} id - The ID of the user.
  * @returns {Promise<Object[]>} - A promise that resolves to an array of favorite activities with their details.
- * @throws {ApiError} - Throws an error if no favorite activities are found.
  */
   async findAllfavoriteWithActivitiesByUserId(id) {
     const result = await this.pool.query(`
@@ -20,23 +18,26 @@ export default class FavoriteDatamapper extends coreDatamapper {
     ON "favorite"."activity_id" = "activity"."id"
     WHERE "user_id" = $1`, [id]);
 
-    if (result.rows.length === 0) {
-      throw new ApiError(404, 'Error', 'No favorite activities found for this user');
-    }
-
-    return result.rows[0];
+    return result.rows;
   }
 
   /**
  * Deletes a favorite entry based on user ID and activity ID.
  * @param {number} userId - The ID of the user.
  * @param {number} activityId - The ID of the activity.
- * @throws {ApiError} - Throws an error if no favorite entry is found to delete.
  */
-  async deleteFavoriteWithActivityByUserId(userId, activityId) {
+  async deleteFavoriteByActivityAndUserId(userId, activityId) {
     const result = await this.pool.query(' DELETE FROM "favorite" WHERE "user_id" = $1 AND "activity_id" = $2', [userId, activityId]);
-    if (result.rowCount === 0) {
-      throw new ApiError(404, 'Error', 'Favorite entry not found');
-    }
+    return !!result.rowCount;
+  }
+
+  /**
+ * Find a favorite entry based on user ID and activity ID.
+ * @param {number} userId - The ID of the user.
+ * @param {number} activityId - The ID of the activity.
+ */
+  async findFavoriteByActivityIdAndUserId(activityId, userId) {
+    const result = await this.pool.query(' SELECT * FROM "favorite" WHERE "user_id" = $1 AND "activity_id" = $2', [userId, activityId]);
+    return result.rows[0];
   }
 }

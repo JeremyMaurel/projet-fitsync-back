@@ -4,10 +4,6 @@ import RequestController from '../../controllers/requestController.js';
 import validator from '../../schemas/middleware/validator.js';
 import requestsCreateSchema from '../../schemas/requestsCreateSchema.js';
 import validateToken from '../../middlewares/authentification.js';
-// import checkById from '../../schemas/middleware/checkById.js';
-// import datamappers from '../../datamappers/utils/indexDatamapper.js';
-
-// const { userDatamapper } = datamappers;
 
 const router = Router();
 
@@ -25,6 +21,5 @@ const router = Router();
  * @return {ApiJsonError} 404 - Not Found - application/json
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
-router.post('/requests', validateToken, validator(requestsCreateSchema, 'body'), cw(RequestController.createRequestByUserLogged.bind(RequestController)));
-// checkById([{ modelInstance: userDatamapper, idKey: 'user_id', entityName: 'User' }]),
+router.post('/requests', validateToken, validator(requestsCreateSchema, 'body'), cw(RequestController.createRequest.bind(RequestController)));
 export default router;

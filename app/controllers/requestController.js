@@ -20,7 +20,7 @@ export default class RequestController extends CoreController {
    * A promise that resolves to sending a JSON response with the created request.
    * @throws {ApiError} - Throws an error if the request creation fails.
    */
-  static async createRequestByUserLogged(req, res) {
+  static async createRequest(req, res) {
     const { name, intensity, met } = req.body;
     const userId = req.user.id;
 
