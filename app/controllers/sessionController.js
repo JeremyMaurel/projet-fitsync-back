@@ -18,7 +18,7 @@ export default class SessionController extends CoreController {
  * @returns {Promise<void>} - Returns a promise that resolves with the response or an error.
  */
   static async getAllSessionWithActivitiesByUserId(req, res, next) {
-    const userId = this.getUserIdFromHeader(req, res);
+    const userId = req.user.id;
     const rows = await this.mainDatamapper.findAllSessionDoneWithActivitiesByUserId(userId);
     if (!rows) {
       return next(new ApiError(404, 'Error', 'Sessions not found'));
@@ -35,7 +35,7 @@ export default class SessionController extends CoreController {
  * @throws {ApiError} - Throws an error if the date is not provided or if no session is found to delete.
  */
   static async deleteSession(req, res, next) {
-    const userId = this.getUserIdFromHeader(req, res);
+    const userId = req.user.id;
     const { date } = req.query;
 
     if (!date) {

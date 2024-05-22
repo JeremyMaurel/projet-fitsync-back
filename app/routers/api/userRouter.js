@@ -4,6 +4,7 @@ import cw from '../../middlewares/controllerWrapper.js';
 import validator from '../../schemas/middleware/validator.js';
 import userCreateSchema from '../../schemas/userCreateSchema.js';
 import userLoginSchema from '../../schemas/userLoginSchema.js';
+import validateToken from '../../middlewares/authentification.js';
 
 const router = Router();
 
@@ -19,7 +20,7 @@ router.route('/user')
  * @return {ApiJsonError} 404 - Not Found - application/json
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
-  .get(cw(userController.getUserByJWT.bind(userController)))
+  .get(validateToken, cw(userController.getUserByJWT.bind(userController)))
 
 /**
  * @route DELETE /user
@@ -30,7 +31,7 @@ router.route('/user')
  * @return {404} 404 - Not Found - User not found
  * @return {500} 500 - Internal Server Error - Unexpected error
  */
-  .delete(cw(userController.deleteAccount.bind(userController)));
+  .delete(validateToken, cw(userController.deleteAccount.bind(userController)));
 
 /**
  * @route POST /signup

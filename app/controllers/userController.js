@@ -4,7 +4,6 @@ import jwt from 'jsonwebtoken';
 import CoreController from './utils/coreController.js';
 import datamappers from '../datamappers/utils/indexDatamapper.js';
 import ApiError from '../errors/apiError.js';
-import getUserIdFromJWT from './utils/getUserIdFromJwt.js';
 
 export default class UserController extends CoreController {
   static entityName = 'user';
@@ -12,31 +11,17 @@ export default class UserController extends CoreController {
   static mainDatamapper = datamappers.userDatamapper;
 
   /**
- * Retrieves the user associated with the JWT provided in the request headers.
- * This function parses the 'Authorization' header to extract the JWT, decodes it to find the user's ID,
- * and then fetches the user from the database using that ID. If the token is missing, invalid, or the user does not exist,
- * it sends appropriate error responses.
- * @param {Object} req - The HTTP request object, expected to have a JWT in the 'Authorization' header.
- * @param {Object} res - The HTTP response object used to send back the user data or errors.
- * @param {Function} next - The next middleware function in the stack, used for error handling.
- * @returns {Promise<void>} - A promise that resolves by sending a JSON response with user data or handling errors via middleware.
- */
+   * Get user information by JWT.
+   * @param {object} req - The Express request object.
+   * @param {object} res - The Express response object.
+   * @param {function} next - The Express next middleware function.
+   * @returns {Promise<void>} - Returns a promise that resolves with the response or an error.
+   */
   static async getUserByJWT(req, res, next) {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-      return next(new ApiError(401, 'Authorization Error', 'JWT not provided'));
-    }
+    const userId = req.user.id;
 
-    const token = authHeader.split(' ')[1];
-    // eslint-disable-next-line no-unused-vars
-    const secretKey = process.env.JWT_SECRET;
-
-    const userId = getUserIdFromJWT(token);
-
-    if (!userId) {
-      return next(new ApiError(401, 'Authorization Error', 'Invalid JWT'));
-    }
     const user = await this.mainDatamapper.findById(userId);
+
     if (!user) {
       return next(new ApiError(404, 'Error', 'User not found'));
     }
@@ -51,7 +36,7 @@ export default class UserController extends CoreController {
  * @throws {ApiError} - Throws an error if the user is not found.
  */
   static async deleteAccount(req, res) {
-    const userId = this.getUserIdFromHeader(req, res);
+    const userId = req.user.id;
 
     const userDeleted = await this.mainDatamapper.delete(userId);
 
