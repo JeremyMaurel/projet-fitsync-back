@@ -30,7 +30,7 @@ export default class CategoryDatamapper extends coreDatamapper {
     `, [categoryId]);
 
     if (result.rows.length === 0) {
-      throw new ApiError(404, 'Category not found');
+      throw new ApiError(404, 'Error', 'Category not found');
     }
 
     const category = {

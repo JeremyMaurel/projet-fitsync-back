@@ -23,7 +23,7 @@ export default class CoreDatamapper {
   async findAll() {
     const result = await this.pool.query(`SELECT * FROM "${this.constructor.readTableName}"`);
     if (result.rows.length === 0) {
-      throw new ApiError(404, 'No records found');
+      throw new ApiError(404, 'Api Error', `${this.constructor.writeTableName} not found`);
     }
     return result.rows;
   }
@@ -40,7 +40,7 @@ export default class CoreDatamapper {
   async findById(id) {
     const result = await this.pool.query(`SELECT * FROM "${this.constructor.writeTableName}" WHERE id = $1`, [id]);
     if (result.rows.length === 0) {
-      throw new ApiError(404, 'Record not found');
+      throw new ApiError(404, 'Api Error', `${this.constructor.writeTableName} not found`);
     }
     return result.rows[0];
   }
@@ -101,7 +101,7 @@ export default class CoreDatamapper {
     `, updateValues);
 
     if (result.rows.length === 0) {
-      throw new ApiError(404, 'Record not found');
+      throw new ApiError(404, 'Api Error', `${this.constructor.writeTableName} not found`);
     }
     return result.rows[0];
   }

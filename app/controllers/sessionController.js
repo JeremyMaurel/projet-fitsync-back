@@ -21,7 +21,7 @@ export default class SessionController extends CoreController {
     const userId = this.getUserIdFromHeader(req, res);
     const rows = await this.mainDatamapper.findAllSessionDoneWithActivitiesByUserId(userId);
     if (!rows) {
-      return next(new ApiError(404, 'Sessions not found'));
+      return next(new ApiError(404, 'Error', 'Sessions not found'));
     }
     return res.json({ total: rows.length, data: rows });
   }
@@ -39,7 +39,7 @@ export default class SessionController extends CoreController {
     const { date } = req.query;
 
     if (!date) {
-      return next(new ApiError(404, 'Date not provided'));
+      return next(new ApiError(404, 'Error', 'Date not provided'));
     }
     await this.mainDatamapper.deleteSessionWithActivityByUserId(userId, date);
     return res.status(204).json();
