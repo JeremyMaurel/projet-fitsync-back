@@ -3,7 +3,8 @@ import { Router } from 'express';
 import sessionController from '../../controllers/sessionController.js';
 import cw from '../../middlewares/controllerWrapper.js';
 import validator from '../../schemas/middleware/validator.js';
-import createSchema from '../../schemas/sessionSchema.js';
+import sessionCreateSchema from '../../schemas/sessionCreateSchema.js';
+import validateToken from '../../middlewares/authentification.js';
 
 const router = Router();
 
@@ -15,9 +16,10 @@ const router = Router();
  * @return {SessionActivity[]} 200 - Success response - application/json
  * @return {ApiJsonError} 400 - Bad request response - application/json
  * @return {ApiJsonError} 404 - Not Found - application/json
+ * @return {ApiJsonError} 401 - Unauthorized - Invalid or missing token
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
-router.get('/sessions-history', cw(sessionController.getAllSessionWithActivitiesByUserId.bind(sessionController)));
+router.get('/sessions-history', validateToken, cw(sessionController.getAllSessionWithActivitiesByUserId.bind(sessionController)));
 
 /**
  * @route DELETE /session-history
@@ -27,10 +29,11 @@ router.get('/sessions-history', cw(sessionController.getAllSessionWithActivities
  * @param {string} date.query.required - The date of the session in the format 'YYYY-MM-DD HH:mm:ss+TZ'
  * @return {204} 204 - No Content - Successfully deleted the session
  * @return {400} 400 - Bad Request - Date not provided
+ * @return {ApiJsonError} 401 - Unauthorized - Invalid or missing token
  * @return {404} 404 - Not Found - Session entry not found
  * @return {500} 500 - Internal Server Error - Unexpected error
  */
-router.delete('/session-history', cw(sessionController.deleteSession.bind(sessionController)));
+router.delete('/session-history', validateToken, cw(sessionController.deleteSession.bind(sessionController)));
 
 /**
  * @route POST /session
@@ -47,6 +50,6 @@ router.delete('/session-history', cw(sessionController.deleteSession.bind(sessio
  * @return {404} 404 - Not Found - User or activity not found
  * @return {500} 500 - Internal Server Error - Unexpected error
  */
-router.post('/session', validator(createSchema, 'body'), cw(sessionController.create.bind(sessionController)));
+router.post('/session', validateToken, validator(sessionCreateSchema, 'body'), cw(sessionController.createSessionByUserLogged.bind(sessionController)));
 
 export default router;

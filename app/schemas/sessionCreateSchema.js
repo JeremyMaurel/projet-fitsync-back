@@ -13,10 +13,6 @@ export default Joi.object({
   comment: Joi.string()
     .max(1024)
     .messages({ 'string.max': 'Max size for comment: 1024 caracters' }),
-  user_id: Joi.number()
-    .integer()
-    .required()
-    .messages({ 'number.base': 'The user\'s id should be a number' }),
   activity_id: Joi.number()
     .integer()
     .required()

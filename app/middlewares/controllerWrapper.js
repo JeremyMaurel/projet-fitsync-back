@@ -13,7 +13,7 @@ export default function cw(controller) {
     try {
       await controller(req, res, next);
     } catch (error) {
-      const apiError = new ApiError(500, 'Internal Server Error', error.message);
+      const apiError = new ApiError(error.status || 500, error.name || 'Internal Server Error', error.message);
       next(apiError);
     }
   };
