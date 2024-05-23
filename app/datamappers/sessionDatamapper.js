@@ -12,11 +12,40 @@ export default class SessionDatamapper extends coreDatamapper {
  * @returns {Promise<Object[]>} - A promise that resolves to an array of sessions with their activity details.
  */
   async findAllSessionDoneWithActivitiesByUserId(id) {
-    const result = await this.pool.query(`
-    SELECT "session"."created_at", "session"."duration", "session"."comment", "activity"."name" as "activity_name", "activity"."met" as "activity_met" FROM "session"
-    JOIN "activity"
-    ON "session"."activity_id" = "activity"."id"
-    WHERE "user_id" = $1`, [id]);
+    const query = `
+    SELECT 
+    "s"."id", 
+    "s"."date", 
+    "s"."duration", 
+    "s"."comment", 
+    "a"."name" as "activity_name", 
+    "a"."met" as "activity_met" 
+    FROM "session" as "s"
+    JOIN "activity" as "a"
+    ON "s"."activity_id" = "a"."id"
+    WHERE "s"."user_id" = $1`;
+
+    const result = await this.pool.query(query, [id]);
+
+    return result.rows;
+  }
+
+  async findOneSessionDoneWithActivitiesByUserId(id, userId) {
+    const query = `
+    SELECT 
+    "s"."id", 
+    "s"."date", 
+    "s"."duration", 
+    "s"."comment", 
+    "a"."name" as 
+    "activity_name", 
+    "a"."met" as "activity_met" 
+    FROM "session" as "s"
+    JOIN "activity" as "a"
+    ON "s"."activity_id" = "a"."id"
+    WHERE "s"."id" = $1 AND "user_id" = $2`;
+
+    const result = await this.pool.query(query, [id, userId]);
 
     return result.rows[0];
   }
@@ -38,6 +67,32 @@ export default class SessionDatamapper extends coreDatamapper {
  */
   async findSessionByDateAndUserId(date, userId) {
     const result = await this.pool.query(' SELECT * FROM "session" WHERE "user_id" = $1 AND "date" = $2', [userId, date]);
+    return result.rows[0];
+  }
+
+  async updateSessionByUserId(id, input, userId) {
+    const updateColumns = [];
+    const updateValues = [];
+
+    Object.keys(input).forEach((key, index) => {
+      updateColumns.push(`"${key}" = $${index + 1}`);
+      updateValues.push(input[key]);
+    });
+
+    updateValues.push(userId, id);
+
+    const query = `
+    UPDATE "${this.constructor.writeTableName}" as "s"
+    SET ${updateColumns.join(', ')}
+    FROM "activity" as "a"
+    WHERE "user_id" = $${updateValues.length - 1}
+    AND "s"."id" = $${updateValues.length}
+    AND "a"."id" = "activity_id"
+    RETURNING "s"."id", "s"."date", "s"."duration", "s"."comment", "a"."name", "a"."met";
+`;
+
+    const result = await this.pool.query(query, updateValues);
+
     return result.rows[0];
   }
 }

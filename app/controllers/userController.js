@@ -30,25 +30,6 @@ export default class UserController extends CoreController {
   }
 
   /**
- * Deletes the user's account.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
- * @returns {Promise<void>} - Returns a promise that resolves with a 204 status on success.
- * @throws {ApiError} - Throws an error if the user is not found.
- */
-  static async deleteAccount(req, res) {
-    const userId = req.user.id;
-
-    const userDeleted = await this.mainDatamapper.delete(userId);
-
-    if (!userDeleted) {
-      throw new ApiError(404, 'Error', 'User not found');
-    }
-
-    return res.status(204).json();
-  }
-
-  /**
    * Create a new user with a hashed password.
    * @param {object} req - The Express request object.
    * @param {object} req.body - The request body containing user data.
@@ -120,5 +101,36 @@ export default class UserController extends CoreController {
   static logout(req, res) {
     res.clearCookie('token');
     res.status(200).json({ message: 'Logout successful' });
+  }
+
+  static async updateUserByUserId(req, res, next) {
+    const userId = req.user.id;
+    const input = req.body;
+
+    if (input.mail) {
+      const existingUserByEmail = await this.mainDatamapper.findByEmail(input.mail);
+      if (existingUserByEmail) {
+        return next(new ApiError(400, 'Update Error', 'Email already in use'));
+      }
+    }
+
+    if (input.pseudo) {
+      const existingUserByPseudo = await this.mainDatamapper.findByPseudo(input.pseudo);
+      if (existingUserByPseudo) {
+        return next(new ApiError(400, 'Update Error', 'Pseudo already in use'));
+      }
+    }
+
+    if (input.password) {
+      const saltRounds = parseInt(process.env.SALT_ROUNDS, 10);
+      const hashedPassword = await bcrypt.hash(input.password, saltRounds);
+      input.password = hashedPassword;
+    }
+
+    const row = await this.mainDatamapper.update(userId, input);
+    if (!row) {
+      return next(new ApiError(404, 'Api Error', `${this.entityName} not found`));
+    }
+    return res.json({ data: row });
   }
 }

@@ -23,6 +23,11 @@ export default class CoreDatamapper {
     return result.rows;
   }
 
+  async findAllByUserId(userId) {
+    const result = await this.pool.query(`SELECT * FROM "${this.constructor.readTableName}" WHERE user_id = $1`, [userId]);
+    return result.rows;
+  }
+
   /**
  * Finds a record by ID
  *
@@ -87,8 +92,8 @@ export default class CoreDatamapper {
 
     const query = `
       UPDATE "${this.constructor.writeTableName}"
-      SET ${updateColumns.join(', ')}
-      WHERE id = $${updateValues.length}
+      SET ${updateColumns.join(',')}
+      WHERE "id" = $${updateValues.length}
       RETURNING *;
     `;
 
@@ -105,9 +110,14 @@ export default class CoreDatamapper {
  * @returns {boolean} - Returns true if a record was deleted, false otherwise
  */
   async delete(id) {
-    const result = await this.pool.query(`DELETE FROM "${this.constructor.writeTableName}" WHERE id = $1`, [id]);
+    const result = await this.pool.query(`DELETE FROM "${this.constructor.writeTableName}" WHERE "id" = $1`, [id]);
     // Since it's a delete operation, we don't return any data.
     // However, we return a boolean indicating whether a record was successfully deleted.
+    return !!result.rowCount;
+  }
+
+  async deleteByUserId(id, userId) {
+    const result = await this.pool.query(`DELETE FROM "${this.constructor.writeTableName}" WHERE "id" = $1 AND "user_id" = $2`, [id, userId]);
     return !!result.rowCount;
   }
 }

@@ -138,6 +138,7 @@ CREATE TABLE "favorite"(
 -------------------------------------------------------------
 
 CREATE TABLE "session"(
+    "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "duration" INTEGER NOT NULL,
     "date" TIMESTAMPTZ NOT NULL,
     "comment" VARCHAR(1024),
@@ -145,7 +146,7 @@ CREATE TABLE "session"(
     "activity_id" INT NOT NULL REFERENCES "activity"("id"),
     "created_at" TIMESTAMPTZ NOT NULL default(now()),
     "updated_at" TIMESTAMPTZ,
-    CONSTRAINT "unique_session" UNIQUE("user_id", "date")
+    CONSTRAINT "unique_session" UNIQUE("date", "user_id")
 );
 
 -------------------------------------------------------------

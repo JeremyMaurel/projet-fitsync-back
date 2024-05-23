@@ -16,6 +16,7 @@ const router = Router();
  * @property {number} id - The ID of the activity
  * @property {string} name - The name of the activity
  * @property {number} met - The MET value of the activity
+ * @property {number} category_id - The ID of the category this activity belongs to
  */
 
 /**
@@ -32,17 +33,7 @@ const router = Router();
  */
 
 /**
- * @route GET /categories
- * @summary Get all categories
- * @tags Categories
- * @return {Category[]} 200 - Success response - application/json
- * @return {ApiJsonError} 400 - Bad request response - application/json
- * @return {ApiJsonError} 401 - Unauthorized - JWT not provided or invalid - application/json
- * @return {ApiJsonError} 500 - Internal Server Error - application/json
- */
-
-/**
- * @route GET /categories
+ * GET /categories
  * @summary Get all categories
  * @tags Categories
  * @return {Category[]} 200 - Success response - application/json
