@@ -7,7 +7,6 @@ import categoryRouter from './api/categoryRouter.js';
 import activityRouter from './api/activityRouter.js';
 import requestRouter from './api/requestRouter.js';
 import error404 from '../middlewares/error404Handler.js';
-import errorHandler from '../middlewares/errorHandler.js';
 
 const router = Router();
 
@@ -22,9 +21,5 @@ router.use(requestRouter);
 
 // Use middleware to handle 404 errors if the requested route is not found
 router.use(error404);
-
-// Use the error handling middleware to display error messages in a
-// specific format if any errors occur
-router.use(errorHandler);
 
 export default router;

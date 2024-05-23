@@ -5,6 +5,7 @@ import validator from '../../schemas/middleware/validator.js';
 import userCreateSchema from '../../schemas/userCreateSchema.js';
 import userLoginSchema from '../../schemas/userLoginSchema.js';
 import validateToken from '../../middlewares/authentification.js';
+import { loginLimiter } from '../../middlewares/rateLimit.js';
 
 const router = Router();
 
