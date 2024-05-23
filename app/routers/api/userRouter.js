@@ -75,4 +75,12 @@ router.post('/signup', validator(userCreateSchema, 'body'), cw(userController.cr
  */
 router.post('/login', validator(userLoginSchema, 'body'), cw(userController.login.bind(userController)));
 
+/**
+ * @route POST /logout
+ * @summary Log out a user by clearing the JWT cookie
+ * @tags Auth
+ * @return {object} 200 - OK - Successfully logged out
+ */
+router.post('/logout', cw(userController.logout.bind(userController)));
+
 export default router;

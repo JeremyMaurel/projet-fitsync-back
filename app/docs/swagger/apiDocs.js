@@ -11,8 +11,8 @@ const options = {
     version: '1.0.0',
     title: 'FitSync',
   },
-  baseDir: `${__dirname}/../../..`, // Ceci devrait pointer vers le dossier 'app' ou la racine de votre projet
-  filesPattern: './app/**/*Router.js', // Ajustez ce pattern pour qu'il corresponde à vos fichiers de routeurs
+  baseDir: `${__dirname}/../../..`,
+  filesPattern: './app/**/*Router.js',
   swaggerUIPath: process.env.API_DOCUMENTATION_ROUTE || '/api-docs',
   exposeApiDocs: true,
   apiDocsPath: '/api-docs',

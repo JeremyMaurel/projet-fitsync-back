@@ -111,4 +111,14 @@ export default class UserController extends CoreController {
 
     res.status(200).json({ message: 'Login successful' });
   }
+
+  /**
+   * Log out a user by clearing the JWT cookie
+   * @param {object} req - The request object
+   * @param {object} res - The response object
+   */
+  static logout(req, res) {
+    res.clearCookie('token');
+    res.status(200).json({ message: 'Logout successful' });
+  }
 }
