@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 export default class CoreDatamapper {
   static readTableName = null;
 
@@ -23,6 +24,13 @@ export default class CoreDatamapper {
     return result.rows;
   }
 
+  /**
+ * Finds all records by user ID.
+ * This method retrieves all records from the database table associated with the provided user ID.
+ * It returns an array of records.
+ * @param {number} userId - The ID of the user.
+ * @returns {Promise<Object[]>} - A promise that resolves to an array of records associated with the user.
+ */
   async findAllByUserId(userId) {
     const result = await this.pool.query(`SELECT * FROM "${this.constructor.readTableName}" WHERE user_id = $1`, [userId]);
     return result.rows;
@@ -30,10 +38,8 @@ export default class CoreDatamapper {
 
   /**
  * Finds a record by ID
- *
  * This method retrieves a record from the database table specified by the class's
  * writeTableName property using the provided ID.
- *
  * @param {number} id - The ID of the record to retrieve
  * @returns {Object|null} - The retrieved record, or null if no record is found
  */
@@ -116,6 +122,14 @@ export default class CoreDatamapper {
     return !!result.rowCount;
   }
 
+  /**
+ * Deletes a record by its ID and user ID.
+ * This method deletes a record from the database table using the provided ID and user ID.
+ * It returns a boolean indicating whether the deletion was successful.
+ * @param {number} id - The ID of the record to delete.
+ * @param {number} userId - The ID of the user.
+ * @returns {Promise<boolean>} - A promise that resolves to a boolean indicating the success of the deletion.
+ */
   async deleteByUserId(id, userId) {
     const result = await this.pool.query(`DELETE FROM "${this.constructor.writeTableName}" WHERE "id" = $1 AND "user_id" = $2`, [id, userId]);
     return !!result.rowCount;

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable consistent-return */
 import CoreController from './utils/coreController.js';
 import ApiError from '../errors/apiError.js';
@@ -10,17 +11,19 @@ export default class RequestController extends CoreController {
   static mainDatamapper = datamappers.requestDatamapper;
 
   /**
-   * Creates a new request for the logged-in user.
-   * @param {object} req - The Express request object.
-   * @param {object} req.body - The request body containing the request data.
-   * @param {string} req.body.name - The name of the request.
-   * @param {string} req.body.intensity - The intensity of the request.
-   * @param {number} req.body.met - The MET (Metabolic Equivalent of Task) value of the request.
-   * @param {object} res - The Express response object.
-   * @returns {Promise<void>}
-   * A promise that resolves to sending a JSON response with the created request.
-   * @throws {ApiError} - Throws an error if the request creation fails.
-   */
+ * Creates a new request for the logged-in user.
+ * @param {Object} req - The Express request object.
+ * @param {Object} req.body - The request body containing the request data.
+ * @param {string} req.body.name - The name of the request.
+ * @param {string} req.body.intensity - The intensity of the request.
+ * @param {number} req.body.met - The MET (Metabolic Equivalent of Task) value of the request.
+ * @param {Object} res - The Express response object.
+ * @param {Function} res.status - The function to set the status code.
+ * @param {Function} res.json - The function to send a JSON response.
+ * @param {Function} next - The next middleware function in the Express chain.
+ * @returns {Promise<void>} - A promise that resolves to sending a JSON response with the created request.
+ * @throws {ApiError} - Throws an error if the request creation fails.
+ */
   static async createRequest(req, res, next) {
     const input = req.body;
     const userId = req.user.id;
