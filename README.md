@@ -50,3 +50,14 @@ npm run dev
 ```
 
 Votre API devrait maintenant être fonctionnelle.
+
+8. Générer la documentation JSDoc
+
+```sh
+# installer JSDoc si ce n'est pas déjà le cas
+npm i jsdoc
+# pour vérifier l'installation
+jsdoc --version
+# créer la documentation
+npx jsdoc -c jsdoc.json
+```
