@@ -3,6 +3,7 @@ import userController from '../../controllers/userController.js';
 import cw from '../../middlewares/controllerWrapper.js';
 import validator from '../../schemas/middleware/validator.js';
 import userCreateSchema from '../../schemas/userCreateSchema.js';
+import userUpdateSchema from '../../schemas/userUpdateSchema.js';
 import userLoginSchema from '../../schemas/userLoginSchema.js';
 import validateToken from '../../middlewares/authentification.js';
 
@@ -31,7 +32,8 @@ router.route('/user')
  * @return {404} 404 - Not Found - User not found
  * @return {500} 500 - Internal Server Error - Unexpected error
  */
-  .delete(validateToken, cw(userController.deleteAccount.bind(userController)));
+  .delete(validateToken, cw(userController.delete.bind(userController)))
+  .patch(validateToken, validator(userUpdateSchema, 'body'), cw(userController.updateUserByUserId.bind(userController)));
 
 /**
  * @route POST /signup

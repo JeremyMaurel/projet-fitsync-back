@@ -9,7 +9,7 @@ export default Joi.object({
   }),
   intensity: Joi.string().valid('low', 'moderate', 'high', 'very high').required().messages({
     'string.base': 'Invalid input type for intensity',
-    'any.only': 'Invalid intensity value',
+    'any.only': 'Invalid intensity value: should be now, moderate, high or very high',
     'any.required': 'Intensity is required',
   }),
   met: Joi.number().precision(1).min(0.0).max(99.9)
