@@ -8,6 +8,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import router from './app/routers/index.js';
+import bodySanitizer from './app/middlewares/bodySanitizer.js';
 
 // These lines and their imports configure the environment
 // (dev or prod) as specified in the package.json
@@ -25,6 +26,8 @@ const app = express();
 app.use(cors({ origin: process.env.CORS_ORIGIN }));
 
 app.use(express.json());
+
+app.use(bodySanitizer);
 
 app.use('/api/v1', router);
 

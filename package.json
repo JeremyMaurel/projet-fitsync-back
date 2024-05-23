@@ -27,6 +27,7 @@
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.11.5",
     "pnpm": "^9.1.1",
+    "sanitize-html": "^2.13.0",
     "winston": "^3.13.0"
   },
   "description": ""
