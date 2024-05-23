@@ -6,9 +6,14 @@ import requestsCreateSchema from '../../schemas/requestsCreateSchema.js';
 import validateToken from '../../middlewares/authentification.js';
 
 const router = Router();
+/**
+ * @typedef {object} ApiJsonError
+ * @property {string} message - Error message
+ * @property {string} [details] - Additional error details
+ */
 
 /**
- * @route POST /requests
+ * POST /requests
  * @summary Create a new request.
  * @tags Requests
  * @param {object} request.body.required - The request body - application/json

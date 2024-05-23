@@ -2,8 +2,6 @@
 /* eslint-disable max-len */
 
 import debugMe from 'debug';
-import jwt from 'jsonwebtoken';
-import getUserIdFromJWT from './getUserIdFromJwt.js';
 import ApiError from '../../errors/apiError.js';
 
 const debug = debugMe('off:coreController');

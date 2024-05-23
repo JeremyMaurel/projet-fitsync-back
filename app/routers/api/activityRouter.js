@@ -6,7 +6,20 @@ import validateToken from '../../middlewares/authentification.js';
 const router = Router();
 
 /**
- * @route GET /activities/{id}
+ * @typedef {object} Activity
+ * @property {number} id - The ID of the activity
+ * @property {string} name - The name of the activity
+ * @property {number} met - The MET value of the activity
+ */
+
+/**
+ * @typedef {object} ApiJsonError
+ * @property {string} message - Error message
+ * @property {string} [details] - Additional error details
+ */
+
+/**
+ * GET /activities/{id}
  * @summary Get an activity by ID
  * @tags Activities
  * @param {number} id.path.required - The ID of the activity to retrieve

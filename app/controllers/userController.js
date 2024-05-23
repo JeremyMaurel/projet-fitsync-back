@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable max-len */
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -83,17 +84,6 @@ export default class UserController extends CoreController {
     res.status(201).json(newUser);
   }
 
-  /**
-   * Log in a user and return a JWT.
-   * @param {object} req - The Express request object.
-   * @param {object} req.body - The request body containing login data.
-   * @param {string} req.body.pseudo - The pseudo of the user.
-   * @param {string} req.body.password - The password of the user.
-   * @param {object} res - The Express response object.
-   * @param {function} next - The Express next middleware function.
-   * @returns {Promise<void>} - A promise that resolves to sending a JSON response with the JWT.
-   */
-  // eslint-disable-next-line consistent-return
   static async login(req, res, next) {
     const { pseudo, password } = req.body;
 
@@ -112,6 +102,13 @@ export default class UserController extends CoreController {
       { expiresIn: '1h' },
     );
 
-    res.status(200).json({ token });
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'Strict',
+      maxAge: 3600000,
+    });
+
+    res.status(200).json({ message: 'Login successful' });
   }
 }

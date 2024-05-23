@@ -7,48 +7,63 @@ import sessionCreateSchema from '../../schemas/sessionCreateSchema.js';
 import validateToken from '../../middlewares/authentification.js';
 
 const router = Router();
+/**
+ * @typedef {object} SessionActivity
+ * @property {string} created_at - The date and time when the session was created
+ * @property {integer} duration - The duration of the session in minutes
+ * @property {string} comment - An optional comment about the session
+ * @property {string} activity_name - The name of the activity
+ * @property {number} activity_met - The MET value of the activity
+ */
 
 /**
- * GET /history
+ * @typedef {object} ApiJsonError
+ * @property {string} message - Error message
+ * @property {string} [details] - Additional error details
+ */
+
+/**
+ * GET /sessions-history
  * @summary Get all sessions with activities for a user
  * @tags History
  * @param {string} userId.query - The ID of the user
  * @return {SessionActivity[]} 200 - Success response - application/json
  * @return {ApiJsonError} 400 - Bad request response - application/json
- * @return {ApiJsonError} 404 - Not Found - application/json
  * @return {ApiJsonError} 401 - Unauthorized - Invalid or missing token
+ * @return {ApiJsonError} 404 - Not Found - application/json
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
 router.get('/sessions-history', validateToken, cw(sessionController.getAllSessionWithActivitiesByUserId.bind(sessionController)));
 
 /**
- * @route DELETE /session-history
+ * DELETE /session-history
  * @summary Deletes a session based on user ID and date from the query parameters
  * @tags Sessions
  * @param {string} authorization.header.required - Bearer token for authorization
  * @param {string} date.query.required - The date of the session in the format 'YYYY-MM-DD HH:mm:ss+TZ'
- * @return {204} 204 - No Content - Successfully deleted the session
- * @return {400} 400 - Bad Request - Date not provided
+ * @return {void} 204 - No Content - Successfully deleted the session
+ * @return {ApiJsonError} 400 - Bad Request - Date not provided
  * @return {ApiJsonError} 401 - Unauthorized - Invalid or missing token
- * @return {404} 404 - Not Found - Session entry not found
- * @return {500} 500 - Internal Server Error - Unexpected error
+ * @return {ApiJsonError} 404 - Not Found - Session entry not found
+ * @return {ApiJsonError} 500 - Internal Server Error - Unexpected error
  */
 router.delete('/session-history', validateToken, cw(sessionController.deleteSession.bind(sessionController)));
 
 /**
- * @route POST /session
+ * POST /session
  * @summary Creates a new session with the provided data
  * @tags Sessions
+ * @param {object} request.body.required - The session data
  * @param {integer} request.body.duration.required - The duration of the session in minutes
  * @param {string} request.body.date.required - The date and time of the session in the format 'YYYY-MM-DD HH:mm:ss+TZ'
  * @param {string} request.body.comment - An optional comment about the session
  * @param {integer} request.body.user_id.required - The ID of the user associated with the session
  * @param {integer} request.body.activity_id.required - The ID of the activity associated with the session
- * @return {201} 201 - Created - Successfully created the session
- * @return {400} 400 - Bad Request - Invalid session data provided
- * @return {401} 401 - Unauthorized - Invalid or missing authorization token
- * @return {404} 404 - Not Found - User or activity not found
- * @return {500} 500 - Internal Server Error - Unexpected error
+ * @return {SessionActivity} 201 - Created - Successfully created the session
+ * @return {ApiJsonError} 400 - Bad Request - Invalid session data provided
+ * @return {ApiJsonError} 401 - Unauthorized - Invalid or missing authorization token
+ * @return {ApiJsonError} 404 - Not Found - User or activity not found
+ * @return {ApiJsonError} 500 - Internal Server Error - Unexpected error
  */
 router.post('/session', validateToken, validator(sessionCreateSchema, 'body'), cw(sessionController.createSession.bind(sessionController)));
 
