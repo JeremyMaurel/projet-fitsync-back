@@ -30,6 +30,12 @@ export default class SessionDatamapper extends coreDatamapper {
     return result.rows;
   }
 
+  /**
+   * Finds a specific session done with its activities for a given user ID.
+   * @param {number} id - The ID of the session.
+   * @param {number} userId - The ID of the user.
+   * @returns {Promise<Object>} - A promise that resolves to a session with its activity details.
+   */
   async findOneSessionDoneWithActivitiesByUserId(id, userId) {
     const query = `
     SELECT 
@@ -51,25 +57,34 @@ export default class SessionDatamapper extends coreDatamapper {
   }
 
   /**
- * Deletes a session based on user ID and date.
- * @param {number} userId - The ID of the user.
- * @param {string} date - The date of the session in a format recognized by PostgreSQL.
- */
+   * Deletes a session based on user ID and date.
+   * @param {number} userId - The ID of the user.
+   * @param {string} date - The date of the session in a format recognized by PostgreSQL.
+   * @returns {Promise<boolean>} - A promise that resolves to a boolean indicating the success of the deletion.
+   */
   async deleteSessionByDateAndUserId(userId, date) {
     const result = await this.pool.query(' DELETE FROM "session" WHERE "user_id" = $1 AND "date" = $2', [userId, date]);
     return !!result.rowCount;
   }
 
   /**
- * Find a session based on user ID and date.
- * @param {number} userId - The ID of the user.
- * @param {string} date - The date of the session in a format recognized by PostgreSQL.
- */
+   * Finds a session based on user ID and date.
+   * @param {number} userId - The ID of the user.
+   * @param {string} date - The date of the session in a format recognized by PostgreSQL.
+   * @returns {Promise<Object>} - A promise that resolves to the found session.
+   */
   async findSessionByDateAndUserId(date, userId) {
     const result = await this.pool.query(' SELECT * FROM "session" WHERE "user_id" = $1 AND "date" = $2', [userId, date]);
     return result.rows[0];
   }
 
+  /**
+   * Updates a session based on session ID and user ID.
+   * @param {number} id - The ID of the session.
+   * @param {Object} input - The updated session data.
+   * @param {number} userId - The ID of the user.
+   * @returns {Promise<Object>} - A promise that resolves to the updated session.
+   */
   async updateSessionByUserId(id, input, userId) {
     const updateColumns = [];
     const updateValues = [];

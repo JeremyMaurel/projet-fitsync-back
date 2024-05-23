@@ -8,7 +8,22 @@ import validateToken from '../../middlewares/authentification.js';
 const router = Router();
 
 /**
- * @route POST /requests
+ * @typedef {object} Request
+ * @property {number} id - The ID of the request
+ * @property {string} name - The name of the request
+ * @property {string} intensity - The intensity value of the request
+ * @property {number} met - The MET value of the request
+ * @property {number} user_id - The ID of the user this request belongs to
+ */
+
+/**
+ * @typedef {object} ApiJsonError
+ * @property {string} message - Error message
+ * @property {string} [details] - Additional error details
+ */
+
+/**
+ * POST /requests
  * @summary Create a new request.
  * @tags Requests
  * @param {object} request.body.required - The request body - application/json
@@ -22,4 +37,5 @@ const router = Router();
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
 router.post('/requests', validateToken, validator(requestsCreateSchema, 'body'), cw(RequestController.createRequest.bind(RequestController)));
+
 export default router;

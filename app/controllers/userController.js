@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable max-len */
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -37,8 +38,8 @@ export default class UserController extends CoreController {
    * @param {string} req.body.password - The password of the user.
    * @param {string} [req.body.role=user] - The role of the user (default: 'user').
    * @param {object} res - The Express response object.
-   * @returns {Promise<void>}
-   * A promise that resolves to sending a JSON response with the created user.
+   * @param {function} next - The Express next middleware function.
+   * @returns {Promise<void>} - A promise that resolves to sending a JSON response with the created user.
    */
   // eslint-disable-next-line consistent-return
   static async createUserWithHashedPassword(req, res, next) {
@@ -65,16 +66,15 @@ export default class UserController extends CoreController {
   }
 
   /**
-   * Log in a user and return a JWT.
+   * User login.
    * @param {object} req - The Express request object.
    * @param {object} req.body - The request body containing login data.
    * @param {string} req.body.pseudo - The pseudo of the user.
    * @param {string} req.body.password - The password of the user.
    * @param {object} res - The Express response object.
    * @param {function} next - The Express next middleware function.
-   * @returns {Promise<void>} - A promise that resolves to sending a JSON response with the JWT.
+   * @returns {Promise<void>} - A promise that resolves to sending a JSON response with a success message.
    */
-  // eslint-disable-next-line consistent-return
   static async login(req, res, next) {
     const { pseudo, password } = req.body;
 
@@ -93,9 +93,37 @@ export default class UserController extends CoreController {
       { expiresIn: '1h' },
     );
 
-    res.status(200).json({ token });
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'Strict',
+      maxAge: 3600000,
+    });
+
+    res.status(200).json({ message: 'Login successful' });
   }
 
+  /**
+   * Log out a user by clearing the JWT cookie.
+   * @param {object} req - The request object.
+   * @param {object} res - The response object.
+   * @returns {void}
+   */
+  static logout(req, res) {
+    res.clearCookie('token');
+    res.status(200).json({ message: 'Logout successful' });
+  }
+
+  /**
+   * Update user information by user ID.
+   * @param {object} req - The Express request object.
+   * @param {object} req.user - The user object.
+   * @param {string} req.user.id - The ID of the user.
+   * @param {object} req.body - The request body containing updated user data.
+   * @param {object} res - The Express response object.
+   * @param {function} next - The Express next middleware function.
+   * @returns {Promise<void>} - A promise that resolves to sending a JSON response with the updated user data.
+   */
   static async updateUserByUserId(req, res, next) {
     const userId = req.user.id;
     const input = req.body;

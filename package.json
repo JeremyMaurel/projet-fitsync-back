@@ -18,14 +18,19 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "debug": "^4.3.4",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "express-jsdoc-swagger": "^1.8.0",
+    "express-rate-limit": "^7.2.0",
     "joi": "^17.13.1",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.11.5",
-    "pnpm": "^9.1.1"
+    "pnpm": "^9.1.1",
+    "sanitize-html": "^2.13.0",
+    "winston": "^3.13.0"
   },
   "description": ""
 }

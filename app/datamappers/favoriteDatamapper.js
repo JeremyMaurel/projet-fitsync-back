@@ -31,17 +31,19 @@ export default class FavoriteDatamapper extends coreDatamapper {
  * Deletes a favorite entry based on user ID and activity ID.
  * @param {number} userId - The ID of the user.
  * @param {number} activityId - The ID of the activity.
- */
+  * @returns {Promise<boolean>} - A promise that resolves to a boolean indicating the success of the deletion.
+   */
   async deleteFavoriteByActivityAndUserId(activityId, userId) {
     const result = await this.pool.query(' DELETE FROM "favorite" WHERE "user_id" = $1 AND "activity_id" = $2', [userId, activityId]);
     return !!result.rowCount;
   }
 
   /**
- * Find a favorite entry based on user ID and activity ID.
- * @param {number} userId - The ID of the user.
- * @param {number} activityId - The ID of the activity.
- */
+   * Finds a favorite entry based on user ID and activity ID.
+   * @param {number} userId - The ID of the user.
+   * @param {number} activityId - The ID of the activity.
+   * @returns {Promise<Object>} - A promise that resolves to the found favorite entry.
+   */
   async findFavoriteByActivityIdAndUserId(activityId, userId) {
     const result = await this.pool.query(' SELECT * FROM "favorite" WHERE "user_id" = $1 AND "activity_id" = $2', [userId, activityId]);
     return result.rows[0];

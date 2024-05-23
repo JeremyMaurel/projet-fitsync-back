@@ -1,4 +1,5 @@
 import debugMe from 'debug';
+import logger from '../docs/logger.js';
 
 const debug = debugMe('app:middlewares:errorHandler');
 
@@ -15,6 +16,7 @@ const debug = debugMe('app:middlewares:errorHandler');
 export default function errorHandler(err, req, res, next) {
   debug('Error:', err);
 
+  logger.error('Api Error', err);
   const statusCode = err.status || 500;
   const message = err.message || 'Internal Server Error';
 

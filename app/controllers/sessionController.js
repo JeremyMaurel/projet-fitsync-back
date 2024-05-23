@@ -11,12 +11,14 @@ export default class SessionController extends CoreController {
   static mainDatamapper = datamappers.sessionDatamapper;
 
   /**
- * Retrieves all sessions done with activities by user ID from the request header.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
- * @param {Function} next - The next middleware function.
- * @returns {Promise<void>} - Returns a promise that resolves with the response or an error.
- */
+   * Retrieves all sessions done with activities by user ID from the request header.
+   * @param {Object} req - The request object.
+   * @param {Object} req.user - The user object.
+   * @param {string} req.user.id - The ID of the user.
+   * @param {Object} res - The response object.
+   * @param {Function} next - The next middleware function.
+   * @returns {Promise<void>} - Returns a promise that resolves with the response or an error.
+   */
   static async getAllSessionWithActivitiesByUserId(req, res, next) {
     const userId = req.user.id;
     const rows = await this.mainDatamapper.findAllSessionDoneWithActivitiesByUserId(userId);
@@ -26,6 +28,18 @@ export default class SessionController extends CoreController {
     return res.json({ total: rows.length, data: rows });
   }
 
+  /**
+   * Get a specific session with activities by user ID
+   * This method retrieves a specific session along with its activities associated with a specific user ID and session ID from the database using the datamapper's findOneSessionDoneWithActivitiesByUserId method.
+   * @param {Request} req - The Express request object.
+   * @param {Object} req.user - The user object attached to the request.
+   * @param {string} req.user.id - The ID of the user.
+   * @param {Object} req.params - The request parameters.
+   * @param {string} req.params.id - The ID of the session to retrieve.
+   * @param {Response} res - The Express response object.
+   * @param {Function} next - The Express next middleware function.
+   * @returns {Promise<Response|void>} - A JSON response with the session data if found, or calls the next middleware with an error.
+   */
   static async getOneSessionWithActivitiesByUserId(req, res, next) {
     const userId = req.user.id;
     const { id } = req.params;
@@ -38,15 +52,17 @@ export default class SessionController extends CoreController {
 
   /**
    * Creates a new session for the logged-in user.
-   * @param {object} req - The Express request object.
-   * @param {object} req.body - The request body containing the session data.
+   * @param {Object} req - The Express request object.
+   * @param {Object} req.body - The request body containing the session data.
    * @param {number} req.body.duration - The duration of the session in minutes.
    * @param {string} req.body.date - The date of the session.
    * @param {string} req.body.comment - A comment or note about the session.
    * @param {number} req.body.activityId - The ID of the activity associated with the session.
-   * @param {object} res - The Express response object.
-   * @returns {Promise<void>}
-   * A promise that resolves to sending a JSON response with the created session.
+   * @param {Object} res - The Express response object.
+   * @param {Function} res.status - The function to set the status code.
+   * @param {Function} res.json - The function to send a JSON response.
+   * @param {Function} next - The next middleware function.
+   * @returns {Promise<void>} - A promise that resolves to sending a JSON response with the created session.
    * @throws {ApiError} - Throws an error if the session creation fails.
    */
   static async createSession(req, res, next) {
