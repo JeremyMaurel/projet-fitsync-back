@@ -26,6 +26,12 @@ export default class CoreController {
     return res.json({ total: rows.length, data: rows });
   }
 
+  static async getAllByUserId(req, res) {
+    const userId = req.user.id;
+    const rows = await this.mainDatamapper.findAllByUserId(userId);
+    return res.json({ total: rows.lenght, data: rows });
+  }
+
   /**
    * Get a single record by ID
    * This method retrieves a single record from the database using the datamapper's findById method.
@@ -90,6 +96,16 @@ export default class CoreController {
     debug(`[${this.entityName}] calling delete method`);
     const { id } = req.params;
     const deleted = await this.mainDatamapper.delete(id);
+    if (!deleted) {
+      return next(new ApiError(404, 'Api Error', `${this.entityName} not found`));
+    }
+    return res.status(204).json();
+  }
+
+  static async deleteByUserId(req, res, next) {
+    const { id } = req.params;
+    const userId = req.user.id;
+    const deleted = await this.mainDatamapper.deleteByUserId(id, userId);
     if (!deleted) {
       return next(new ApiError(404, 'Api Error', `${this.entityName} not found`));
     }

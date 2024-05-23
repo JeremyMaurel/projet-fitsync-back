@@ -26,26 +26,14 @@ export default class SessionController extends CoreController {
     return res.json({ total: rows.length, data: rows });
   }
 
-  /**
- * Deletes a session based on user ID and date from the request.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
- * @param {Function} next - The next middleware function.
- * @returns {Promise<void>} - Returns a promise that resolves with a 204 status on success.
- * @throws {ApiError} - Throws an error if the date is not provided or if no session is found to delete.
- */
-  static async deleteSession(req, res, next) {
+  static async getOneSessionWithActivitiesByUserId(req, res, next) {
     const userId = req.user.id;
-    const { date } = req.body;
-
-    const session = await this.mainDatamapper.findSessionByDateAndUserId(date, userId);
-    if (!session) { return next(new ApiError(404, 'Error', 'Session not found')); }
-
-    if (!date) {
-      return next(new ApiError(404, 'Error', 'Date not provided'));
+    const { id } = req.params;
+    const row = await this.mainDatamapper.findOneSessionDoneWithActivitiesByUserId(id, userId);
+    if (!row) {
+      return next(new ApiError(404, 'Error', 'Sessions not found'));
     }
-    await this.mainDatamapper.deleteSessionByDateAndUserId(userId, date);
-    return res.status(204).json();
+    return res.json({ data: row });
   }
 
   /**
@@ -62,23 +50,45 @@ export default class SessionController extends CoreController {
    * @throws {ApiError} - Throws an error if the session creation fails.
    */
   static async createSession(req, res, next) {
-    const {
-      duration, date, comment, activityId,
-    } = req.body;
     const userId = req.user.id;
+    const input = req.body;
+    input.user_id = userId;
 
-    const activity = await datamappers.activityDatamapper.findById(activityId);
+    const activity = await datamappers.activityDatamapper.findById(input.activityId);
     if (!activity) {
       return next(new ApiError(404, 'Error', 'Activity not found'));
     }
 
-    const newSession = await this.mainDatamapper.create({
-      duration,
-      date,
-      comment,
-      user_id: userId,
-      activity_id: activityId,
-    });
+    const verifDate = await datamappers.sessionDatamapper.findSessionByDateAndUserId(input.date, userId);
+
+    if (verifDate) { return next(new ApiError(409, 'Conflict', 'You can only have one session at the same time')); }
+
+    input.activity_id = input.activityId;
+    delete input.activityId;
+
+    const newSession = await this.mainDatamapper.create(input);
     return res.status(201).json({ data: newSession });
   }
+
+  static async updateSessionByUserId(req, res, next) {
+    const userId = req.user.id;
+    const { id } = req.params;
+    const input = req.body;
+
+    if (input.activityId) {
+      input.activity_id = input.activityId;
+      delete input.activityId;
+    }
+
+    const row = await this.mainDatamapper.updateSessionByUserId(id, input, userId);
+    if (!row) {
+      return next(new ApiError(404, 'Api Error', `${this.entityName} not found`));
+    }
+    return res.json({ data: row });
+  }
 }
+
+// {date: valeur
+// newDate:valeur
+// duration:valeur
+// activityId:valeur}

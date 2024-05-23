@@ -4,6 +4,7 @@ import sessionController from '../../controllers/sessionController.js';
 import cw from '../../middlewares/controllerWrapper.js';
 import validator from '../../schemas/middleware/validator.js';
 import sessionCreateSchema from '../../schemas/sessionCreateSchema.js';
+import sessionUpdateSchema from '../../schemas/sessionUpdateSchema.js';
 import validateToken from '../../middlewares/authentification.js';
 
 const router = Router();
@@ -21,6 +22,8 @@ const router = Router();
  */
 router.get('/sessions-history', validateToken, cw(sessionController.getAllSessionWithActivitiesByUserId.bind(sessionController)));
 
+router.get('/sessions-history/:id', validateToken, cw(sessionController.getOneSessionWithActivitiesByUserId.bind(sessionController)));
+
 /**
  * @route DELETE /session-history
  * @summary Deletes a session based on user ID and date from the query parameters
@@ -33,7 +36,7 @@ router.get('/sessions-history', validateToken, cw(sessionController.getAllSessio
  * @return {404} 404 - Not Found - Session entry not found
  * @return {500} 500 - Internal Server Error - Unexpected error
  */
-router.delete('/session-history', validateToken, cw(sessionController.deleteSession.bind(sessionController)));
+router.delete('/sessions-history/:id', validateToken, cw(sessionController.deleteByUserId.bind(sessionController)));
 
 /**
  * @route POST /session
@@ -50,6 +53,7 @@ router.delete('/session-history', validateToken, cw(sessionController.deleteSess
  * @return {404} 404 - Not Found - User or activity not found
  * @return {500} 500 - Internal Server Error - Unexpected error
  */
-router.post('/session', validateToken, validator(sessionCreateSchema, 'body'), cw(sessionController.createSession.bind(sessionController)));
+router.post('/sessions', validateToken, validator(sessionCreateSchema, 'body'), cw(sessionController.createSession.bind(sessionController)));
 
+router.patch('/sessions-history/:id', validateToken, validator(sessionUpdateSchema, 'body'), cw(sessionController.updateSessionByUserId.bind(sessionController)));
 export default router;
