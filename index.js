@@ -11,6 +11,7 @@ import { fileURLToPath } from 'url';
 import router from './app/routers/index.js';
 import bodySanitizer from './app/middlewares/bodySanitizer.js';
 import createDoc from './app/docs/swagger/apiDocs.js';
+import { globalLimiter } from './app/middlewares/rateLimit.js';
 
 // These lines and their imports configure the environment
 // (dev or prod) as specified in the package.json
@@ -31,6 +32,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(bodySanitizer);
+
+app.use(globalLimiter);
 
 /**
  * GET /api

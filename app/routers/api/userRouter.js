@@ -73,7 +73,7 @@ router.post('/signup', validator(userCreateSchema, 'body'), cw(userController.cr
  * @return {ApiJsonError} 400 - Bad Request - application/json
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
-router.post('/login', validator(userLoginSchema, 'body'), cw(userController.login.bind(userController)));
+router.post('/login', loginLimiter, validator(userLoginSchema, 'body'), cw(userController.login.bind(userController)));
 
 /**
  * @route POST /logout
