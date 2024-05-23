@@ -80,17 +80,24 @@ export default class CoreDatamapper {
  * @returns {Object} - The updated record
  */
   async update(id, input) {
-    const updateColumns = Object.keys(input).join(', ');
-    const updateValues = Object.values(input);
+    const updateColumns = [];
+    const updateValues = [];
+
+    Object.keys(input).forEach((key, index) => {
+      updateColumns.push(`"${key}" = $${index + 1}`);
+      updateValues.push(input[key]);
+    });
 
     updateValues.push(id);
 
-    const result = await this.pool.query(`
-    UPDATE "${this.constructor.writeTableName}"
-    SET ${updateColumns}
-    WHERE id = $${updateValues.length}
-    RETURNING *;
-    `, updateValues);
+    const query = `
+      UPDATE "${this.constructor.writeTableName}"
+      SET ${updateColumns.join(',')}
+      WHERE "id" = $${updateValues.length}
+      RETURNING *;
+    `;
+
+    const result = await this.pool.query(query, updateValues);
 
     return result.rows[0];
   }
@@ -103,7 +110,7 @@ export default class CoreDatamapper {
  * @returns {boolean} - Returns true if a record was deleted, false otherwise
  */
   async delete(id) {
-    const result = await this.pool.query(`DELETE FROM "${this.constructor.writeTableName}" WHERE id = $1`, [id]);
+    const result = await this.pool.query(`DELETE FROM "${this.constructor.writeTableName}" WHERE "id" = $1`, [id]);
     // Since it's a delete operation, we don't return any data.
     // However, we return a boolean indicating whether a record was successfully deleted.
     return !!result.rowCount;

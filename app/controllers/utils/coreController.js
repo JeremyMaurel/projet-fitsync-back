@@ -94,7 +94,7 @@ export default class CoreController {
    */
   static async delete(req, res, next) {
     debug(`[${this.entityName}] calling delete method`);
-    const { id } = req.params;
+    const id = req.params.id || req.user.id;
     const deleted = await this.mainDatamapper.delete(id);
     if (!deleted) {
       return next(new ApiError(404, 'Api Error', `${this.entityName} not found`));

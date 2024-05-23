@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { Router } from 'express';
 import favoriteController from '../../controllers/favoriteController.js';
 import cw from '../../middlewares/controllerWrapper.js';
@@ -6,9 +7,10 @@ import validateToken from '../../middlewares/authentification.js';
 import favoriteCreateSchema from '../../schemas/favoriteCreateSchema.js';
 
 const router = Router();
+router.route('/favorites')
 
 /**
- * GET /favorite
+ * GET /favorites
  * @summary Get all favorites activities for a user
  * @tags Favorites
  * @param {string} userId.query - The ID of the user
@@ -18,19 +20,7 @@ const router = Router();
  * @return {ApiJsonError} 404 - Not Found - application/json
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
-router.get('/favorites', validateToken, cw(favoriteController.getAllFavoriteWithActivitiesByUserId.bind(favoriteController)));
-
-/**
- * DELETE /favorites/:id
- * @summary Delete a favorite entry by activity ID for the authenticated user
- * @tags Favorites
- * @param {string} id.path.required - The ID of the activity to be removed from favorites
- * @return {204} 204 - No Content - Successfully deleted the favorite entry
- *  @return {ApiJsonError} 401 - Unauthorized - JWT not provided or invalid - application/json
- * @return {ApiJsonError} 404 - Not Found - Favorite entry not found
- * @return {ApiJsonError} 500 - Internal Server Error - Unexpected error
- */
-router.delete('/favorites/:ActivityId', validateToken, cw(favoriteController.deleteFavorite.bind(favoriteController)));
+  .get(validateToken, cw(favoriteController.getAllFavoriteWithActivitiesByUserId.bind(favoriteController)))
 
 /**
  * POST /favorites
@@ -43,6 +33,18 @@ router.delete('/favorites/:ActivityId', validateToken, cw(favoriteController.del
  * @return {ApiJsonError} 409 - Conflict - Favorite entry already exists
  * @return {ApiJsonError} 500 - Internal Server Error - Unexpected error
  */
-router.post('/favorites', validateToken, validator(favoriteCreateSchema, 'body'), cw(favoriteController.createFavorite.bind(favoriteController)));
+  .post(validateToken, validator(favoriteCreateSchema, 'body'), cw(favoriteController.createFavorite.bind(favoriteController)));
+
+/**
+ * DELETE /favorites/:id
+ * @summary Delete a favorite entry by activity ID for the authenticated user
+ * @tags Favorites
+ * @param {string} id.path.required - The ID of the activity to be removed from favorites
+ * @return {204} 204 - No Content - Successfully deleted the favorite entry
+ *  @return {ApiJsonError} 401 - Unauthorized - JWT not provided or invalid - application/json
+ * @return {ApiJsonError} 404 - Not Found - Favorite entry not found
+ * @return {ApiJsonError} 500 - Internal Server Error - Unexpected error
+ */
+router.delete('/favorites/:activityId', validateToken, cw(favoriteController.deleteFavorite.bind(favoriteController)));
 
 export default router;

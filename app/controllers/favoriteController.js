@@ -36,12 +36,12 @@ export default class FavoriteController extends CoreController {
     const userId = req.user.id;
     const { activityId } = req.params;
 
-    const favorite = await this.mainDatamapper.findFavoriteByaAndUserId(activityId, userId);
+    const favorite = await this.mainDatamapper.findFavoriteByActivityIdAndUserId(activityId, userId);
     if (!favorite) {
       return next(new ApiError(404, 'Error', 'Favorite not found'));
     }
 
-    await this.mainDatamapper.deleteFavoriteByActivityAndUserId(userId, activityId);
+    await this.mainDatamapper.deleteFavoriteByActivityAndUserId(activityId, userId);
     return res.status(204).json();
   }
 

@@ -12,21 +12,40 @@ export default class SessionDatamapper extends coreDatamapper {
  * @returns {Promise<Object[]>} - A promise that resolves to an array of sessions with their activity details.
  */
   async findAllSessionDoneWithActivitiesByUserId(id) {
-    const result = await this.pool.query(`
-    SELECT "session"."id", "session"."date", "session"."duration", "session"."comment", "activity"."name" as "activity_name", "activity"."met" as "activity_met" FROM "session"
-    JOIN "activity"
-    ON "session"."activity_id" = "activity"."id"
-    WHERE "session"."user_id" = $1`, [id]);
+    const query = `
+    SELECT 
+    "s"."id", 
+    "s"."date", 
+    "s"."duration", 
+    "s"."comment", 
+    "a"."name" as "activity_name", 
+    "a"."met" as "activity_met" 
+    FROM "session" as "s"
+    JOIN "activity" as "a"
+    ON "s"."activity_id" = "a"."id"
+    WHERE "s"."user_id" = $1`;
+
+    const result = await this.pool.query(query, [id]);
 
     return result.rows;
   }
 
   async findOneSessionDoneWithActivitiesByUserId(id, userId) {
-    const result = await this.pool.query(`
-    SELECT "session"."id", "session"."date", "session"."duration", "session"."comment", "activity"."name" as "activity_name", "activity"."met" as "activity_met" FROM "session"
-    JOIN "activity"
-    ON "session"."activity_id" = "activity"."id"
-    WHERE "session"."id" = $1 AND "user_id" = $2`, [id, userId]);
+    const query = `
+    SELECT 
+    "s"."id", 
+    "s"."date", 
+    "s"."duration", 
+    "s"."comment", 
+    "a"."name" as 
+    "activity_name", 
+    "a"."met" as "activity_met" 
+    FROM "session" as "s"
+    JOIN "activity" as "a"
+    ON "s"."activity_id" = "a"."id"
+    WHERE "s"."id" = $1 AND "user_id" = $2`;
+
+    const result = await this.pool.query(query, [id, userId]);
 
     return result.rows[0];
   }
@@ -52,26 +71,27 @@ export default class SessionDatamapper extends coreDatamapper {
   }
 
   async updateSessionByUserId(id, input, userId) {
-    // Construire les colonnes à mettre à jour dynamiquement
-    const updateColumns = Object.keys(input);
-    const updateValues = Object.values(input);
+    const updateColumns = [];
+    const updateValues = [];
 
-    // Ajouter les placeholders pour les colonnes à mettre à jour
-    const setClause = updateColumns.map((col, index) => `"${col}" = $${index + 1}`).join(', ');
+    Object.keys(input).forEach((key, index) => {
+      updateColumns.push(`"${key}" = $${index + 1}`);
+      updateValues.push(input[key]);
+    });
 
-    // Ajouter les valeurs de userId et id à la liste des valeurs
     updateValues.push(userId, id);
 
-    // Construire et exécuter la requête
-    const result = await this.pool.query(`
-        UPDATE "${this.constructor.writeTableName}" as "s"
-        SET ${setClause}
-        FROM "activity" as "a"
-        WHERE "user_id" = $${updateValues.length - 1}
-        AND "s"."id" = $${updateValues.length}
-        AND "a"."id" = "activity_id"
-        RETURNING "s"."id", "s"."date", "s"."duration", "s"."comment", "a"."name", "a"."met";
-    `, updateValues);
+    const query = `
+    UPDATE "${this.constructor.writeTableName}" as "s"
+    SET ${updateColumns.join(', ')}
+    FROM "activity" as "a"
+    WHERE "user_id" = $${updateValues.length - 1}
+    AND "s"."id" = $${updateValues.length}
+    AND "a"."id" = "activity_id"
+    RETURNING "s"."id", "s"."date", "s"."duration", "s"."comment", "a"."name", "a"."met";
+`;
+
+    const result = await this.pool.query(query, updateValues);
 
     return result.rows[0];
   }

@@ -1,7 +1,8 @@
 import Joi from 'joi';
 
 export default Joi.object({
-  duration: Joi.number(),
+  duration: Joi.number()
+    .messages({ 'number.base': 'Duration must be a number in minuts' }),
   date: Joi.date()
     .iso()
     .less('now')
@@ -14,6 +15,6 @@ export default Joi.object({
     .messages({ 'string.max': 'Max size for comment: 1024 caracters' }),
   activityId: Joi.number()
     .integer()
-    .required()
     .messages({ 'number.base': 'The activity\'s id should be a number' }),
-}).required(1).messages({ 'any.required': 'At least one field must be filled in' });
+})
+  .min(1).messages({ 'object.min': 'At least one field must be filled in' });

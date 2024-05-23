@@ -10,7 +10,7 @@ import validateToken from '../../middlewares/authentification.js';
 const router = Router();
 
 /**
- * GET /history
+ * GET /session-history
  * @summary Get all sessions with activities for a user
  * @tags History
  * @param {string} userId.query - The ID of the user
@@ -20,23 +20,7 @@ const router = Router();
  * @return {ApiJsonError} 401 - Unauthorized - Invalid or missing token
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
-router.get('/sessions-history', validateToken, cw(sessionController.getAllSessionWithActivitiesByUserId.bind(sessionController)));
-
-router.get('/sessions-history/:id', validateToken, cw(sessionController.getOneSessionWithActivitiesByUserId.bind(sessionController)));
-
-/**
- * @route DELETE /session-history
- * @summary Deletes a session based on user ID and date from the query parameters
- * @tags Sessions
- * @param {string} authorization.header.required - Bearer token for authorization
- * @param {string} date.query.required - The date of the session in the format 'YYYY-MM-DD HH:mm:ss+TZ'
- * @return {204} 204 - No Content - Successfully deleted the session
- * @return {400} 400 - Bad Request - Date not provided
- * @return {ApiJsonError} 401 - Unauthorized - Invalid or missing token
- * @return {404} 404 - Not Found - Session entry not found
- * @return {500} 500 - Internal Server Error - Unexpected error
- */
-router.delete('/sessions-history/:id', validateToken, cw(sessionController.deleteByUserId.bind(sessionController)));
+router.get('sessions-history', validateToken, cw(sessionController.getAllSessionWithActivitiesByUserId.bind(sessionController)));
 
 /**
  * @route POST /session
@@ -55,5 +39,22 @@ router.delete('/sessions-history/:id', validateToken, cw(sessionController.delet
  */
 router.post('/sessions', validateToken, validator(sessionCreateSchema, 'body'), cw(sessionController.createSession.bind(sessionController)));
 
-router.patch('/sessions-history/:id', validateToken, validator(sessionUpdateSchema, 'body'), cw(sessionController.updateSessionByUserId.bind(sessionController)));
+router.route('/sessions-history/:id')
+  .get(validateToken, cw(sessionController.getOneSessionWithActivitiesByUserId.bind(sessionController)))
+
+  /**
+ * @route DELETE /session-history
+ * @summary Deletes a session based on user ID and date from the query parameters
+ * @tags Sessions
+ * @param {string} authorization.header.required - Bearer token for authorization
+ * @param {string} date.query.required - The date of the session in the format 'YYYY-MM-DD HH:mm:ss+TZ'
+ * @return {204} 204 - No Content - Successfully deleted the session
+ * @return {400} 400 - Bad Request - Date not provided
+ * @return {ApiJsonError} 401 - Unauthorized - Invalid or missing token
+ * @return {404} 404 - Not Found - Session entry not found
+ * @return {500} 500 - Internal Server Error - Unexpected error
+ */
+  .delete(validateToken, cw(sessionController.deleteByUserId.bind(sessionController)))
+
+  .patch(validateToken, validator(sessionUpdateSchema, 'body'), cw(sessionController.updateSessionByUserId.bind(sessionController)));
 export default router;

@@ -12,11 +12,17 @@ export default class FavoriteDatamapper extends coreDatamapper {
  * @returns {Promise<Object[]>} - A promise that resolves to an array of favorite activities with their details.
  */
   async findAllfavoriteWithActivitiesByUserId(id) {
-    const result = await this.pool.query(`
-    SELECT "favorite"."created_at", "activity"."name" as "activity_name", "activity"."met" as "activity_met" FROM "favorite"
-    JOIN "activity"
-    ON "favorite"."activity_id" = "activity"."id"
-    WHERE "user_id" = $1`, [id]);
+    const query = `SELECT 
+    "f"."created_at", 
+    "a"."name" as "activity_name", 
+    "a"."met" as "activity_met",
+    "a"."id" as "activity_id"
+    FROM "favorite" as "f"
+    JOIN "activity" as "a"
+    ON "f"."activity_id" = "a"."id"
+    WHERE "user_id" = $1`;
+
+    const result = await this.pool.query(query, [id]);
 
     return result.rows;
   }
@@ -26,7 +32,7 @@ export default class FavoriteDatamapper extends coreDatamapper {
  * @param {number} userId - The ID of the user.
  * @param {number} activityId - The ID of the activity.
  */
-  async deleteFavoriteByActivityAndUserId(userId, activityId) {
+  async deleteFavoriteByActivityAndUserId(activityId, userId) {
     const result = await this.pool.query(' DELETE FROM "favorite" WHERE "user_id" = $1 AND "activity_id" = $2', [userId, activityId]);
     return !!result.rowCount;
   }

@@ -14,19 +14,17 @@ export default class CategoryDatamapper extends coreDatamapper {
  * @returns {Object|null} - The category with its activities, or null if no category is found
  */
   async findCategoryWithActivities(categoryId) {
-    const result = await this.pool.query(`
+    const query = `
       SELECT 
-        c.id as category_id, 
-        c.name as category_name, 
-        a.id as activity_id, 
-        a.name as activity_name, 
-        a.met, 
-        a.created_at, 
-        a.updated_at 
-      FROM "category" c
-      LEFT JOIN "activity" a ON c.id = a.category_id
-      WHERE c.id = $1
-    `, [categoryId]);
+      "c"."id" as "category_id", 
+      "c"."name" as "category_name", 
+      "a"."id" as "activity_id", 
+      "a"."name" as "activity_name", 
+      "a"."met"        
+      FROM "category" as "c"
+      LEFT JOIN "activity" as "a" ON "c"."id" = "a"."category_id"
+      WHERE "c"."id" = $1;`;
+    const result = await this.pool.query(query, [categoryId]);
 
     const category = {
       id: result.rows[0].category_id,
