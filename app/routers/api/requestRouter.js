@@ -38,4 +38,39 @@ const router = Router();
  */
 router.post('/requests', validateToken, validator(requestsCreateSchema, 'body'), cw(RequestController.createRequest.bind(RequestController)));
 
+/**
+ * GET /requests
+ * @summary Get all requests
+ * @tags Requests
+ * @return {Message} 200 - Success response - application/json
+ * @return {ApiJsonError} 400 - Bad request response - application/json
+ * @return {ApiJsonError} 401 - Unauthorized - application/json
+ * @return {ApiJsonError} 404 - Not Found - application/json
+ * @return {ApiJsonError} 500 - Internal Server Error - application/json
+ */
+router.get('/requests', validateToken, cw(RequestController.getAll.bind(RequestController)));
+
+/**
+ * GET /requests/:id
+ * @summary Get one request
+ * @tags Requests
+ * @return {Message} 200 - Success response - application/json
+ * @return {ApiJsonError} 400 - Bad request response - application/json
+ * @return {ApiJsonError} 401 - Unauthorized - application/json
+ * @return {ApiJsonError} 404 - Not Found - application/json
+ * @return {ApiJsonError} 500 - Internal Server Error - application/json
+ */
+router.get('/requests/:id', validateToken, cw(RequestController.getOne.bind(RequestController)));
+
+/**
+ * DELETE /requests/:id
+ * @summary Deletes the request
+ * @tags Requests
+ * @param {string} authorization.header.required - Bearer token for authorization
+ * @return {void} 204 - No Content - Successfully deleted the account
+ * @return {ApiJsonError} 404 - Not Found - application/json
+ * @return {ApiJsonError} 500 - Internal Server Error - application/json
+ */
+router.delete('/requests/:id', validateToken, cw(RequestController.delete.bind(RequestController)));
+
 export default router;

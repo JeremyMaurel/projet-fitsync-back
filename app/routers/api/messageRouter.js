@@ -24,7 +24,7 @@ const router = Router();
 /**
  * GET /messages
  * @summary Get all messages
- * @tags Message
+ * @tags Messages
  * @return {Message} 200 - Success response - application/json
  * @return {ApiJsonError} 400 - Bad request response - application/json
  * @return {ApiJsonError} 401 - Unauthorized - application/json
@@ -36,30 +36,31 @@ router.get('/messages', validateToken, cw(MessageController.getAll.bind(MessageC
 /**
  * POST /messages
  * @summary Send a new message
- * @tags Message
+ * @tags Messages
  * @param {object} request.body.required - The message data - application/json
  * @param {string} request.body.mail - The mail of sender's message
  * @param {string} request.body.content - The content of the message
- * @return {object} 200 - OK - Successfully logged in with JWT
+ * @return {Message} 200 - OK - Successfully logged in with JWT
  * @return {ApiJsonError} 400 - Bad Request - application/json
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
 router.post('/messages', validateToken, validator(messageCreateSchema, 'body'), cw(MessageController.create.bind(MessageController)));
 
 /**
- * DELETE /messages/:id
+ * DELETE /messages/{id}
  * @summary Deletes the message
- * @tags Message
+ * @tags Messages
  * @param {string} authorization.header.required - Bearer token for authorization
  * @return {void} 204 - No Content - Successfully deleted the account
  * @return {ApiJsonError} 404 - Not Found - application/json
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
 router.delete('/messages/:id', validateToken, cw(MessageController.delete.bind(MessageController)));
+
 /**
- * GET /messages/:id
+ * GET /messages/{id}
  * @summary Get one messages
- * @tags Message
+ * @tags Messages
  * @return {Message} 200 - Success response - application/json
  * @return {ApiJsonError} 400 - Bad request response - application/json
  * @return {ApiJsonError} 401 - Unauthorized - application/json

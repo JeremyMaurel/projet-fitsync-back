@@ -40,12 +40,10 @@ router.get('/sessions-history/:id', validateToken, cw(sessionController.getOneSe
 
 /**
    * DELETE /sessions-history/{id}
-   * @summary Deletes a session based on user ID and date from the query parameters
+   * @summary Deletes a session by ID
    * @tags Sessions
    * @param {string} authorization.header.required - Bearer token for authorization
-   * @param {string} date.query.required - The date of the session in the format 'YYYY-MM-DD HH:mm:ss+TZ'
    * @return {void} 204 - No Content - Successfully deleted the session
-   * @return {ApiJsonError} 400 - Bad Request - Date not provided
    * @return {ApiJsonError} 401 - Unauthorized - Invalid or missing token
    * @return {ApiJsonError} 404 - Not Found - Session entry not found
    * @return {ApiJsonError} 500 - Internal Server Error - Unexpected error
@@ -54,7 +52,7 @@ router.delete('/sessions-history/:id', validateToken, cw(sessionController.delet
 
 /**
  * PATCH /sessions-history/{id}
- * @summary Updates a session based on user ID and session ID
+ * @summary Updates a session by ID
  * @tags Sessions
  * @param {string} authorization.header.required - Bearer token for authorization
  * @param {object} request.body.required - The session data to update
@@ -62,8 +60,7 @@ router.delete('/sessions-history/:id', validateToken, cw(sessionController.delet
  * @param {string} request.body.date - The date and time of the session in the format 'YYYY-MM-DD HH:mm:ss+TZ'
  * @param {string} request.body.comment - An optional comment about the session
  * @param {number} request.body.activity_id - The ID of the activity associated with the session
- * @return {SessionActivity} 200 - Success response - application/json
- * @return {ApiJsonError} 400 - Bad Request - Invalid session data provided
+ * @return {Session} 200 - Success response - application/json
  * @return {ApiJsonError} 401 - Unauthorized - Invalid or missing token
  * @return {ApiJsonError} 404 - Not Found - Session entry not found
  * @return {ApiJsonError} 500 - Internal Server Error - Unexpected error
@@ -75,7 +72,7 @@ router.patch('/sessions-history/:id', validateToken, validator(sessionUpdateSche
  * @summary Get all sessions with activities for a user
  * @tags History
  * @param {string} userId.query - The ID of the user
- * @return {SessionActivity[]} 200 - Success response - application/json
+ * @return {Session[]} 200 - Success response - application/json
  * @return {ApiJsonError} 400 - Bad request response - application/json
  * @return {ApiJsonError} 401 - Unauthorized - Invalid or missing token
  * @return {ApiJsonError} 404 - Not Found - application/json
@@ -93,7 +90,7 @@ router.get('/sessions-history', validateToken, cw(sessionController.getAllSessio
  * @param {string} request.body.comment - An optional comment about the session
  * @param {number} request.body.user_id.required - The ID of the user associated with the session
  * @param {number} request.body.activity_id.required - The ID of the activity associated with the session
- * @return {SessionActivity} 201 - Created - Successfully created the session
+ * @return {Session} 201 - Created - Successfully created the session
  * @return {ApiJsonError} 400 - Bad Request - Invalid session data provided
  * @return {ApiJsonError} 401 - Unauthorized - Invalid or missing authorization token
  * @return {ApiJsonError} 404 - Not Found - User or activity not found

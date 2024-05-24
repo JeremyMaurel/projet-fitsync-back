@@ -1,6 +1,10 @@
 import { Router } from 'express';
 import ActivityController from '../../controllers/activityController.js';
 import cw from '../../middlewares/controllerWrapper.js';
+import validateToken from '../../middlewares/authentification.js';
+import validator from '../../schemas/middleware/validator.js';
+import activityCreateSchema from '../../schemas/activityCreateSchema.js';
+import activityUpdateSchema from '../../schemas/activityUpdateSchema.js';
 
 const router = Router();
 
@@ -30,5 +34,47 @@ const router = Router();
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
 router.get('/activities/:id', cw(ActivityController.getOne.bind(ActivityController)));
+
+/**
+ * POST /activities
+ * @summary Create a new activity
+ * @tags Activities
+ * @param {string} authorization.header.required - Bearer token for authorization
+ * @param {object} request.body.required - The activity data - application/json
+ * @param {string} request.body.name - The name of the activity
+ * @param {number} request.body.met - The MET per minuts of the activity
+ * @param {number} request.body.categoryId - The categoryId of the activity
+ * @return {Activity} 200 - OK - Successfully logged in with JWT
+ * @return {ApiJsonError} 400 - Bad Request - application/json
+ * @return {ApiJsonError} 500 - Internal Server Error - application/json
+ */
+router.post('/activities', validateToken, validator(activityCreateSchema, 'body'), cw(ActivityController.createActivityByCategoryId.bind(ActivityController)));
+
+/**
+ * PATCH /activities/{id}
+ * @summary Update a new activity
+ * @tags Activities
+ * @param {string} authorization.header.required - Bearer token for authorization
+ * @param {object} request.body.required - The activity data - application/json
+ * @param {string} request.body.name - The name of the activity
+ * @param {number} request.body.met - The MET per minuts of the activity
+ * @param {number} request.body.categoryId - The categoryId of the activity
+ * @return {Activity} 200 - OK - Successfully logged in with JWT
+ * @return {ApiJsonError} 400 - Bad Request - application/json
+ * @return {ApiJsonError} 500 - Internal Server Error - application/json
+ */
+router.patch('/activities/:id', validateToken, validator(activityUpdateSchema, 'body'), cw(ActivityController.updateActivityByCategoryId.bind(ActivityController)));
+
+/**
+ * DELETE /activities/{id}
+ * @summary Delete a new activity
+ * @tags Activities
+ * @param {string} authorization.header.required - Bearer token for authorization
+ * @return {void} 204 - No Content - Successfully deleted the activity
+ * @return {ApiJsonError} 401 - Unauthorized - Invalid or missing token
+ * @return {ApiJsonError} 404 - Not Found - Activity entry not found
+ * @return {ApiJsonError} 500 - Internal Server Error - Unexpected error
+*/
+router.delete('/activities/:id', validateToken, cw(ActivityController.delete.bind(ActivityController)));
 
 export default router;
