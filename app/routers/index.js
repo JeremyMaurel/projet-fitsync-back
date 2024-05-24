@@ -6,6 +6,7 @@ import favoriteRouter from './api/favoriteRouter.js';
 import categoryRouter from './api/categoryRouter.js';
 import activityRouter from './api/activityRouter.js';
 import requestRouter from './api/requestRouter.js';
+import messageRouter from './api/messageRouter.js';
 import error404 from '../middlewares/error404Handler.js';
 
 const router = Router();
@@ -18,6 +19,7 @@ router.use(favoriteRouter);
 router.use(categoryRouter);
 router.use(activityRouter);
 router.use(requestRouter);
+router.use(messageRouter);
 
 // Use middleware to handle 404 errors if the requested route is not found
 router.use(error404);
