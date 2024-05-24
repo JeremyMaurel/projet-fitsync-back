@@ -61,3 +61,8 @@ jsdoc --version
 # créer la documentation
 npx jsdoc -c jsdoc.json
 ```
+
+9. Générer la documentation Swagger.
+
+Se rendre sur localhost:PORT/api-docs.
+Pour les routes protégées, il faut générer un token (Insomnia, Curl etc) et le copier dans l'encart Authorize.

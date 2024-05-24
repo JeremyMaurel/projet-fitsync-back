@@ -21,9 +21,10 @@ const router = Router();
  */
 
 /**
- * GET /favorites
+ * GET /api/v1/favorites
  * @summary Get all favorite activities for a user
  * @tags Favorites
+ * @security BearerAuth
  * @param {string} userId.query - The ID of the user
  * @return {Favorite[]} 200 - Success response - application/json
  * @return {ApiJsonError} 400 - Bad request response - application/json
@@ -34,9 +35,10 @@ const router = Router();
 router.get('/favorites', validateToken, cw(favoriteController.getAllFavoriteWithActivitiesByUserId.bind(favoriteController)));
 
 /**
- * POST /favorites
+ * POST /api/v1/favorites
  * @summary Create a new favorite entry for the authenticated user
  * @tags Favorites
+ * @security BearerAuth
  * @param {object} request.body.required - The request body containing the activity ID
  * @param {number} request.body.activityId - The ID of the activity to be favorited
  * @return {FavoriteActivity} 201 - Created - Successfully created the favorite entry
@@ -47,9 +49,10 @@ router.get('/favorites', validateToken, cw(favoriteController.getAllFavoriteWith
 router.post('/favorites', validateToken, validator(favoriteCreateSchema, 'body'), cw(favoriteController.createFavorite.bind(favoriteController)));
 
 /**
- * DELETE /favorites/{activityId}
+ * DELETE /api/v1/favorites/{activityId}
  * @summary Delete a favorite entry by activity ID for the authenticated user
  * @tags Favorites
+ * @security BearerAuth
  * @param {number} activityId.path.required - The ID of the activity to be removed from favorites
  * @return {void} 204 - No Content - Successfully deleted the favorite entry
  * @return {ApiJsonError} 401 - Unauthorized - JWT not provided or invalid - application/json

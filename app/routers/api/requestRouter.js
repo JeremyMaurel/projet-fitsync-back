@@ -23,9 +23,10 @@ const router = Router();
  */
 
 /**
- * POST /requests
+ * POST /api/v1/requests
  * @summary Create a new request.
  * @tags Requests
+ * @security BearerAuth
  * @param {object} request.body.required - The request body - application/json
  * @param {string} request.body.name - The name of the request
  * @param {string} request.body.intensity - The intensity of the request

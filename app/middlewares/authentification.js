@@ -15,7 +15,11 @@ const { userDatamapper } = datamappers;
  * @throws {ApiError} - Throws an error if the JWT is not provided, is invalid, or the user is not found.
  */
 export default async function validateToken(req, res, next) {
-  const { token } = req.cookies;
+  const { token: cookieToken } = req.cookies;
+  const authHeader = req.headers.authorization;
+  const headerToken = authHeader && authHeader.split(' ')[1];
+
+  const token = cookieToken || headerToken;
 
   if (!token) {
     return next(new ApiError(401, 'Api Error', 'JWT not provided'));
