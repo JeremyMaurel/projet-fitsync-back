@@ -32,7 +32,7 @@ const router = Router();
  */
 
 /**
- * GET /categories
+ * GET /api/v1/categories
  * @summary Get all categories
  * @tags Categories
  * @return {Category[]} 200 - Success response - application/json
@@ -43,7 +43,7 @@ const router = Router();
 router.get('/categories', cw(CategoryController.getAll.bind(CategoryController)));
 
 /**
- * GET /categories/{categoryId}
+ * GET /api/v1/categories/{categoryId}
  * @summary Get a category with its activities
  * @tags Categories
  * @param {number} categoryId.path.required - The ID of the category to retrieve

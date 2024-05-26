@@ -26,9 +26,10 @@ const router = Router();
  */
 
 /**
-   * GET /sessions-history/{id}
+   * GET /api/v1/sessions-history/{id}
    * @summary Get a specific session with activities for a user
    * @tags History
+   * @security BearerAuth
    * @param {string} id.path.required - The ID of the session
    * @return {SessionActivity} 200 - Success response - application/json
    * @return {ApiJsonError} 400 - Bad request response - application/json
@@ -39,9 +40,10 @@ const router = Router();
 router.get('/sessions-history/:id', validateToken, cw(sessionController.getOneSessionWithActivitiesByUserId.bind(sessionController)));
 
 /**
-   * DELETE /sessions-history/{id}
-   * @summary Deletes a session by ID
+   * DELETE /api/v1/sessions-history/{id}
+   * @summary Deletes a session based on user ID and date from the query parameters
    * @tags Sessions
+   * @security BearerAuth
    * @param {string} authorization.header.required - Bearer token for authorization
    * @return {void} 204 - No Content - Successfully deleted the session
    * @return {ApiJsonError} 401 - Unauthorized - Invalid or missing token
@@ -51,9 +53,10 @@ router.get('/sessions-history/:id', validateToken, cw(sessionController.getOneSe
 router.delete('/sessions-history/:id', validateToken, cw(sessionController.deleteByUserId.bind(sessionController)));
 
 /**
- * PATCH /sessions-history/{id}
- * @summary Updates a session by ID
+ * PATCH /api/v1/sessions-history/{id}
+ * @summary Updates a session based on user ID and session ID
  * @tags Sessions
+ * @security BearerAuth
  * @param {string} authorization.header.required - Bearer token for authorization
  * @param {object} request.body.required - The session data to update
  * @param {number} request.body.duration - The duration of the session in minutes
@@ -68,9 +71,10 @@ router.delete('/sessions-history/:id', validateToken, cw(sessionController.delet
 router.patch('/sessions-history/:id', validateToken, validator(sessionUpdateSchema, 'body'), cw(sessionController.updateSessionByUserId.bind(sessionController)));
 
 /**
- * GET /sessions-history
+ * GET /api/v1/sessions-history
  * @summary Get all sessions with activities for a user
  * @tags History
+ * @security BearerAuth
  * @param {string} userId.query - The ID of the user
  * @return {Session[]} 200 - Success response - application/json
  * @return {ApiJsonError} 400 - Bad request response - application/json
@@ -81,9 +85,10 @@ router.patch('/sessions-history/:id', validateToken, validator(sessionUpdateSche
 router.get('/sessions-history', validateToken, cw(sessionController.getAllSessionWithActivitiesByUserId.bind(sessionController)));
 
 /**
- * POST /sessions
+ * POST /api/v1/sessions
  * @summary Creates a new session with the provided data
  * @tags Sessions
+ * @security BearerAuth
  * @param {object} request.body.required - The session data
  * @param {number} request.body.duration.required - The duration of the session in minutes
  * @param {string} request.body.date.required - The date and time of the session in the format 'YYYY-MM-DD HH:mm:ss+TZ'

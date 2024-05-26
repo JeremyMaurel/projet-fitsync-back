@@ -30,9 +30,10 @@ const router = Router();
  */
 
 /**
- * GET /user
+ * GET /api/v1/user
  * @summary Get user details from JWT
  * @tags User
+ * @security BearerAuth
  * @return {User} 200 - Success response - application/json
  * @return {ApiJsonError} 400 - Bad request response - application/json
  * @return {ApiJsonError} 401 - Unauthorized - application/json
@@ -42,9 +43,10 @@ const router = Router();
 router.get('/user', validateToken, cw(userController.getUserByJWT.bind(userController)));
 
 /**
- * DELETE /user
+ * DELETE /api/v1/user
  * @summary Deletes the user's account
  * @tags Users
+ * @security BearerAuth
  * @param {string} authorization.header.required - Bearer token for authorization
  * @return {void} 204 - No Content - Successfully deleted the account
  * @return {ApiJsonError} 404 - Not Found - application/json
@@ -53,9 +55,10 @@ router.get('/user', validateToken, cw(userController.getUserByJWT.bind(userContr
 router.delete('/user', validateToken, cw(userController.delete.bind(userController)));
 
 /**
-   * PATCH /user
+   * PATCH /api/v1/user
    * @summary Update user details
    * @tags User
+   * @security BearerAuth
    * @param {object} request.body.required - The user data to update - application/json
    * @param {string} request.body.email - The email of the user
    * @param {string} request.body.pseudo - The pseudo of the user
@@ -69,7 +72,7 @@ router.delete('/user', validateToken, cw(userController.delete.bind(userControll
 router.patch('/user', validateToken, validator(userUpdateSchema, 'body'), cw(userController.updateUserByUserId.bind(userController)));
 
 /**
- * POST /signup
+ * POST /api/v1/signup
  * @summary Create a new user account
  * @tags Users
  * @param {object} request.body.required - The user data - application/json
@@ -84,7 +87,7 @@ router.patch('/user', validateToken, validator(userUpdateSchema, 'body'), cw(use
 router.post('/signup', validator(userCreateSchema, 'body'), cw(userController.createUserWithHashedPassword.bind(userController)));
 
 /**
- * POST /login
+ * POST /api/v1/login
  * @summary Log in a user and return a JWT
  * @tags Auth
  * @param {object} request.body.required - The login data - application/json
@@ -97,11 +100,12 @@ router.post('/signup', validator(userCreateSchema, 'body'), cw(userController.cr
 router.post('/login', loginLimiter, validator(userLoginSchema, 'body'), cw(userController.login.bind(userController)));
 
 /**
- * POST /logout
+ * POST /api/v1/logout
  * @summary Log out a user by clearing the JWT cookie
  * @tags Auth
+ * @security BearerAuth
  * @return {object} 200 - OK - Successfully logged out
  */
-router.post('/logout', cw(userController.logout.bind(userController)));
+router.post('/logout', validateToken, cw(userController.logout.bind(userController)));
 
 export default router;

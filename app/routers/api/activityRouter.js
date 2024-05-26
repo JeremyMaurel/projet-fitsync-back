@@ -23,7 +23,7 @@ const router = Router();
  */
 
 /**
- * GET /activities/{id}
+ * GET /api/v1/activities/{id}
  * @summary Get an activity by ID
  * @tags Activities
  * @param {number} id.path.required - The ID of the activity to retrieve
@@ -36,9 +36,22 @@ const router = Router();
 router.get('/activities/:id', cw(ActivityController.getOne.bind(ActivityController)));
 
 /**
- * POST /activities
+ * GET /api/v1/activities
+ * @summary Get all activities
+ * @tags Activities
+ * @return {Activity} 200 - Success response - application/json
+ * @return {ApiJsonError} 400 - Bad request response - application/json
+ * @return {ApiJsonError} 401 - Unauthorized - JWT not provided or invalid - application/json
+ * @return {ApiJsonError} 404 - Not found response - application/json
+ * @return {ApiJsonError} 500 - Internal Server Error - application/json
+ */
+router.get('/activities', cw(ActivityController.getAll.bind(ActivityController)));
+
+/**
+ * POST /api/v1/activities
  * @summary Create a new activity
  * @tags Activities
+ * @security BearerAuth
  * @param {string} authorization.header.required - Bearer token for authorization
  * @param {object} request.body.required - The activity data - application/json
  * @param {string} request.body.name - The name of the activity
@@ -51,9 +64,10 @@ router.get('/activities/:id', cw(ActivityController.getOne.bind(ActivityControll
 router.post('/activities', validateToken, validator(activityCreateSchema, 'body'), cw(ActivityController.createActivityByCategoryId.bind(ActivityController)));
 
 /**
- * PATCH /activities/{id}
+ * PATCH api/v1/activities/{id}
  * @summary Update a new activity
  * @tags Activities
+ * @security BearerAuth
  * @param {string} authorization.header.required - Bearer token for authorization
  * @param {object} request.body.required - The activity data - application/json
  * @param {string} request.body.name - The name of the activity
@@ -66,9 +80,10 @@ router.post('/activities', validateToken, validator(activityCreateSchema, 'body'
 router.patch('/activities/:id', validateToken, validator(activityUpdateSchema, 'body'), cw(ActivityController.updateActivityByCategoryId.bind(ActivityController)));
 
 /**
- * DELETE /activities/{id}
+ * DELETE api/v1/activities/{id}
  * @summary Delete a new activity
  * @tags Activities
+ * @security BearerAuth
  * @param {string} authorization.header.required - Bearer token for authorization
  * @return {void} 204 - No Content - Successfully deleted the activity
  * @return {ApiJsonError} 401 - Unauthorized - Invalid or missing token

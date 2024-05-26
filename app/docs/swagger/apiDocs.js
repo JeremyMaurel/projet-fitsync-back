@@ -16,6 +16,20 @@ const options = {
   swaggerUIPath: process.env.API_DOCUMENTATION_ROUTE || '/api-docs',
   exposeApiDocs: true,
   apiDocsPath: '/api-docs',
+  security: {
+    BearerAuth: {
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+    },
+  },
+  securityDefinitions: {
+    BearerAuth: {
+      type: 'apiKey',
+      name: 'Authorization',
+      in: 'header',
+    },
+  },
 };
 
 /**
