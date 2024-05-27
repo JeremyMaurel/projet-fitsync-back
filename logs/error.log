@@ -1,0 +1,1 @@
+{"level":"error","message":"Api Error Access denied","name":"Forbidden","service":"Fitsync-api","stack":"Forbidden: Access denied\n    at isAdmin (file:///var/www/html/projet-suivi-activite-back/app/middlewares/adminAuth.js:12:46)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)","status":403,"timestamp":"2024-05-27T07:32:07.168Z"}

@@ -4,6 +4,7 @@ import MessageController from '../../controllers/messageController.js';
 import messageCreateSchema from '../../schemas/messageCreateSchema.js';
 import validator from '../../schemas/middleware/validator.js';
 import validateToken from '../../middlewares/authentification.js';
+import isAdmin from '../../middlewares/adminAuth.js';
 
 const router = Router();
 
@@ -31,7 +32,7 @@ const router = Router();
  * @return {ApiJsonError} 404 - Not Found - application/json
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
-router.get('/messages', validateToken, cw(MessageController.getAll.bind(MessageController)));
+router.get('/messages', validateToken, isAdmin, cw(MessageController.getAll.bind(MessageController)));
 
 /**
  * POST /messages
@@ -55,7 +56,7 @@ router.post('/messages', validateToken, validator(messageCreateSchema, 'body'), 
  * @return {ApiJsonError} 404 - Not Found - application/json
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
-router.delete('/messages/:id', validateToken, cw(MessageController.delete.bind(MessageController)));
+router.delete('/messages/:id', validateToken, isAdmin, cw(MessageController.delete.bind(MessageController)));
 
 /**
  * GET /messages/{id}
@@ -67,5 +68,5 @@ router.delete('/messages/:id', validateToken, cw(MessageController.delete.bind(M
  * @return {ApiJsonError} 404 - Not Found - application/json
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
-router.get('/messages/:id', validateToken, cw(MessageController.getOne.bind(MessageController)));
+router.get('/messages/:id', validateToken, isAdmin, cw(MessageController.getOne.bind(MessageController)));
 export default router;
