@@ -4,6 +4,7 @@ import RequestController from '../../controllers/requestController.js';
 import validator from '../../schemas/middleware/validator.js';
 import requestsCreateSchema from '../../schemas/requestsCreateSchema.js';
 import validateToken from '../../middlewares/authentification.js';
+import isAdmin from '../../middlewares/adminAuth.js';
 
 const router = Router();
 
@@ -49,7 +50,7 @@ router.post('/requests', validateToken, validator(requestsCreateSchema, 'body'),
  * @return {ApiJsonError} 404 - Not Found - application/json
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
-router.get('/requests', validateToken, cw(RequestController.getAll.bind(RequestController)));
+router.get('/requests', validateToken, isAdmin, cw(RequestController.getAll.bind(RequestController)));
 
 /**
  * GET /requests/:id
@@ -61,7 +62,7 @@ router.get('/requests', validateToken, cw(RequestController.getAll.bind(RequestC
  * @return {ApiJsonError} 404 - Not Found - application/json
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
-router.get('/requests/:id', validateToken, cw(RequestController.getOne.bind(RequestController)));
+router.get('/requests/:id', validateToken, isAdmin, cw(RequestController.getOne.bind(RequestController)));
 
 /**
  * DELETE /requests/:id
@@ -72,6 +73,6 @@ router.get('/requests/:id', validateToken, cw(RequestController.getOne.bind(Requ
  * @return {ApiJsonError} 404 - Not Found - application/json
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
-router.delete('/requests/:id', validateToken, cw(RequestController.delete.bind(RequestController)));
+router.delete('/requests/:id', validateToken, isAdmin, cw(RequestController.delete.bind(RequestController)));
 
 export default router;

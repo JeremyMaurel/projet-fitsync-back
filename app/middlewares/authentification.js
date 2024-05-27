@@ -35,6 +35,6 @@ export default async function validateToken(req, res, next) {
     req.user = user;
     next();
   } catch (error) {
-    return next(new ApiError(401, 'Authorization Error', 'Invalid JWT'));
+    return next(new ApiError(error.status, error.name, error.message));
   }
 }

@@ -5,6 +5,7 @@ import validateToken from '../../middlewares/authentification.js';
 import validator from '../../schemas/middleware/validator.js';
 import activityCreateSchema from '../../schemas/activityCreateSchema.js';
 import activityUpdateSchema from '../../schemas/activityUpdateSchema.js';
+import isAdmin from '../../middlewares/adminAuth.js';
 
 const router = Router();
 
@@ -61,7 +62,7 @@ router.get('/activities', cw(ActivityController.getAll.bind(ActivityController))
  * @return {ApiJsonError} 400 - Bad Request - application/json
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
-router.post('/activities', validateToken, validator(activityCreateSchema, 'body'), cw(ActivityController.createActivityByCategoryId.bind(ActivityController)));
+router.post('/activities', validateToken, isAdmin, validator(activityCreateSchema, 'body'), cw(ActivityController.createActivityByCategoryId.bind(ActivityController)));
 
 /**
  * PATCH api/v1/activities/{id}
@@ -77,7 +78,7 @@ router.post('/activities', validateToken, validator(activityCreateSchema, 'body'
  * @return {ApiJsonError} 400 - Bad Request - application/json
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
-router.patch('/activities/:id', validateToken, validator(activityUpdateSchema, 'body'), cw(ActivityController.updateActivityByCategoryId.bind(ActivityController)));
+router.patch('/activities/:id', validateToken, isAdmin, validator(activityUpdateSchema, 'body'), cw(ActivityController.updateActivityByCategoryId.bind(ActivityController)));
 
 /**
  * DELETE api/v1/activities/{id}
@@ -90,6 +91,6 @@ router.patch('/activities/:id', validateToken, validator(activityUpdateSchema, '
  * @return {ApiJsonError} 404 - Not Found - Activity entry not found
  * @return {ApiJsonError} 500 - Internal Server Error - Unexpected error
 */
-router.delete('/activities/:id', validateToken, cw(ActivityController.delete.bind(ActivityController)));
+router.delete('/activities/:id', validateToken, isAdmin, cw(ActivityController.delete.bind(ActivityController)));
 
 export default router;
