@@ -14,4 +14,8 @@ export default class UserDatamapper extends CoreDatamapper {
     const result = await this.pool.query(`SELECT * FROM "${this.constructor.writeTableName}" WHERE pseudo = $1`, [pseudo]);
     return result.rows[0];
   }
+
+  async updatePassword(id, newPassword) {
+    await this.pool.query(`UPDATE "${this.constructor.writeTableName}" SET password = $1 WHERE id = $2`, [newPassword, id]);
+  }
 }
