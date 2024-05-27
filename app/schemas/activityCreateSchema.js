@@ -7,7 +7,8 @@ export default Joi.object({
     'string.max': 'Name exceeds maximum length',
     'any.required': 'Name is required',
   }),
-  met: Joi.number().precision(1).min(0.0).max(99.9)
+  met: Joi.number().precision(1).prefs({ convert: false }).min(0.0)
+    .max(99.9)
     .required()
     .messages({
       'number.base': 'Invalid input type for MET',

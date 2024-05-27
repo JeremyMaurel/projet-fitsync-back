@@ -8,7 +8,7 @@ export default Joi.object({
     .required()
     .messages({
       'date.base': 'You should send a date',
-      'date.less': 'Date should be less than today ',
+      'date.less': 'Date should be equal or less than today ',
     }),
   comment: Joi.string()
     .max(1024)

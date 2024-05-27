@@ -64,6 +64,24 @@ export default class CoreController {
   }
 
   /**
+ * Get a single record by ID and user Id
+ * This method retrieves a single record from the database using the datamapper's findOneByIdAndUserId method.
+ * @param {Object} req - The Express request object
+ * @param {Object} req.params - The request parameters
+ * @param {string} req.params.id - The ID of the entity to retrieve
+ * @param {string} req.user.id - The ID of the user
+ * @param {Object} res - The Express response object
+ * @param {Function} res.json - The function to send a JSON response
+ * @param {Function} next - The next middleware function in the Express chain
+ * @returns {Promise<Response>} - A JSON response with the data of the record
+ */
+  static async getOneByIdAndUserId(req, res, next) {
+    const { id } = req.params;
+    const userId = req.user.id;
+    const rows = await this.mainDatamapper.findOneByIdAndUserId(id, userId);
+  }
+
+  /**
  * Create a new record
  * This method creates a new record in the database using the datamapper's create method.
  * @param {Object} req - The Express request object
@@ -76,6 +94,14 @@ export default class CoreController {
   static async create(req, res) {
     debug(`[${this.entityName}] calling create method`);
     const input = req.body;
+    const row = await this.mainDatamapper.create(input);
+    return res.status(201).json({ data: row });
+  }
+
+  static async createByUserId(req, res) {
+    const input = req.body;
+    const userId = req.user.id;
+    input.user_id = userId;
     const row = await this.mainDatamapper.create(input);
     return res.status(201).json({ data: row });
   }

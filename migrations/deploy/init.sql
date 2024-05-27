@@ -117,12 +117,12 @@ CREATE INDEX idx_activity_name ON activity (name);
 -------------------------------------------------------------
 
 CREATE TABLE "weight_tracking"(
+    "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "weight_id" INT NOT NULL REFERENCES "weight"("id"),
     "user_id" INT NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
     "date" TIMESTAMPTZ,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT(now()),
-    "updated_at" TIMESTAMPTZ,
-    CONSTRAINT "unique_weight_tracking" UNIQUE ("user_id", "date") 
+    "updated_at" TIMESTAMPTZ
 );
 
 -------------------------------------------------------------

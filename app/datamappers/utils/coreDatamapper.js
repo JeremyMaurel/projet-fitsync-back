@@ -32,7 +32,23 @@ export default class CoreDatamapper {
  * @returns {Promise<Object[]>} - A promise that resolves to an array of records associated with the user.
  */
   async findAllByUserId(userId) {
-    const result = await this.pool.query(`SELECT * FROM "${this.constructor.readTableName}" WHERE user_id = $1`, [userId]);
+    const result = await this.pool.query(`SELECT * FROM "${this.constructor.readTableName}" WHERE "user_id" = $1`, [userId]);
+    return result.rows;
+  }
+
+  /**
+ * Finds one records by record Id and user ID.
+ * This method retrieves one records from the database table associated with the provided user ID.
+ * It returns a records.
+ * @param {number} id - The ID of the record searched.
+ * @param {number} userId - The ID of the user.
+ * @returns {Promise<Object[]>} - A promise that resolves to an array of records associated with the user.
+ */
+  async findOneByIdAndUserId(id, userId) {
+    const result = await this.pool.query(`
+    SELECT * from "${this.constructor.readTableName}"
+    WHERE "${this.constructor.readTableName}"."id" = $1
+    AND "user_id" = $2`, [id, userId]);
     return result.rows;
   }
 

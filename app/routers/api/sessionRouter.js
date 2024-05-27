@@ -31,7 +31,7 @@ const router = Router();
    * @tags History
    * @security BearerAuth
    * @param {string} id.path.required - The ID of the session
-   * @return {SessionActivity} 200 - Success response - application/json
+   * @return {Session} 200 - Success response - application/json
    * @return {ApiJsonError} 400 - Bad request response - application/json
    * @return {ApiJsonError} 401 - Unauthorized - Invalid or missing token
    * @return {ApiJsonError} 404 - Not Found - application/json
@@ -41,7 +41,7 @@ router.get('/sessions-history/:id', validateToken, cw(sessionController.getOneSe
 
 /**
    * DELETE /api/v1/sessions-history/{id}
-   * @summary Deletes a session based on user ID and date from the query parameters
+   * @summary Deletes a session based on user ID and session ID
    * @tags Sessions
    * @security BearerAuth
    * @param {string} authorization.header.required - Bearer token for authorization

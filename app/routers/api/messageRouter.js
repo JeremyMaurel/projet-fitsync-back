@@ -26,6 +26,7 @@ const router = Router();
  * GET /messages
  * @summary Get all messages
  * @tags Messages
+ * @security BearerAuth
  * @return {Message} 200 - Success response - application/json
  * @return {ApiJsonError} 400 - Bad request response - application/json
  * @return {ApiJsonError} 401 - Unauthorized - application/json
@@ -38,6 +39,7 @@ router.get('/messages', validateToken, isAdmin, cw(MessageController.getAll.bind
  * POST /messages
  * @summary Send a new message
  * @tags Messages
+ * @security BearerAuth
  * @param {object} request.body.required - The message data - application/json
  * @param {string} request.body.mail - The mail of sender's message
  * @param {string} request.body.content - The content of the message
@@ -51,6 +53,7 @@ router.post('/messages', validateToken, validator(messageCreateSchema, 'body'), 
  * DELETE /messages/{id}
  * @summary Deletes the message
  * @tags Messages
+ * @security BearerAuth
  * @param {string} authorization.header.required - Bearer token for authorization
  * @return {void} 204 - No Content - Successfully deleted the account
  * @return {ApiJsonError} 404 - Not Found - application/json
@@ -62,6 +65,7 @@ router.delete('/messages/:id', validateToken, isAdmin, cw(MessageController.dele
  * GET /messages/{id}
  * @summary Get one messages
  * @tags Messages
+ * @security BearerAuth
  * @return {Message} 200 - Success response - application/json
  * @return {ApiJsonError} 400 - Bad request response - application/json
  * @return {ApiJsonError} 401 - Unauthorized - application/json

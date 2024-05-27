@@ -86,6 +86,24 @@ export default class SessionController extends CoreController {
     return res.status(201).json({ data: newSession });
   }
 
+  /**
+ * Updates a session for the logged-in user.
+ *
+ * @param {Object} req - The Express request object.
+ * @param {Object} req.params - The request parameters containing the session ID.
+ * @param {string} req.params.id - The ID of the session to update.
+ * @param {Object} req.body - The request body containing the updated session data.
+ * @param {number} req.body.duration - The updated duration of the session in minutes.
+ * @param {string} req.body.date - The updated date of the session.
+ * @param {string} req.body.comment - The updated comment or note about the session.
+ * @param {number} req.body.activityId - The updated ID of the activity associated with the session.
+ * @param {Object} res - The Express response object.
+ * @param {Function} res.status - The function to set the status code.
+ * @param {Function} res.json - The function to send a JSON response.
+ * @param {Function} next - The next middleware function.
+ * @returns {Promise<void>} - A promise that resolves to sending a JSON response with the updated session.
+ * @throws {ApiError} - Throws an error if the session update fails.
+ */
   static async updateSessionByUserId(req, res, next) {
     const userId = req.user.id;
     const { id } = req.params;
@@ -103,8 +121,3 @@ export default class SessionController extends CoreController {
     return res.json({ data: row });
   }
 }
-
-// {date: valeur
-// newDate:valeur
-// duration:valeur
-// activityId:valeur}
