@@ -44,6 +44,7 @@ router.post('/requests', validateToken, validator(requestsCreateSchema, 'body'),
  * GET /requests
  * @summary Get all requests
  * @tags Requests
+ * @security BearerAuth
  * @return {Message} 200 - Success response - application/json
  * @return {ApiJsonError} 400 - Bad request response - application/json
  * @return {ApiJsonError} 401 - Unauthorized - application/json
@@ -56,6 +57,7 @@ router.get('/requests', validateToken, isAdmin, cw(RequestController.getAll.bind
  * GET /requests/:id
  * @summary Get one request
  * @tags Requests
+ * @security BearerAuth
  * @return {Message} 200 - Success response - application/json
  * @return {ApiJsonError} 400 - Bad request response - application/json
  * @return {ApiJsonError} 401 - Unauthorized - application/json
@@ -68,6 +70,7 @@ router.get('/requests/:id', validateToken, isAdmin, cw(RequestController.getOne.
  * DELETE /requests/:id
  * @summary Deletes the request
  * @tags Requests
+ * @security BearerAuth
  * @param {string} authorization.header.required - Bearer token for authorization
  * @return {void} 204 - No Content - Successfully deleted the account
  * @return {ApiJsonError} 404 - Not Found - application/json
