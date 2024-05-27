@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import CoreController from './utils/coreController.js';
 import datamappers from '../datamappers/utils/indexDatamapper.js';
 import ApiError from '../errors/apiError.js';
+import sendEmail from './utils/sendEmail.js';
 
 export default class UserController extends CoreController {
   static entityName = 'user';
@@ -153,5 +154,66 @@ export default class UserController extends CoreController {
       return next(new ApiError(404, 'Api Error', `${this.entityName} not found`));
     }
     return res.json({ data: row });
+  }
+
+  /**
+ * Handles the request to reset a user's password.
+ * @param {object} req - The request object from the client.
+ * @param {object} req.body - The body of the request.
+ * @param {string} req.body.mail - The email address of the user requesting the password reset.
+ * @param {object} res - The response object to send the response.
+ * @param {function} next - The next middleware function in the stack.
+ * @returns {Promise<void>} - A promise that resolves when the password reset link is sent.
+ */
+  static async requestResetPassword(req, res, next) {
+    const { mail } = req.body;
+    const user = await this.mainDatamapper.findByEmail(mail);
+
+    if (!user) {
+      return next(new ApiError(404, 'User not found', 'No user found with this email'));
+    }
+
+    const resetToken = jwt.sign(
+      { userId: user.id },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' },
+    );
+
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+
+    await sendEmail(user.mail, 'Password Reset', `Click the link to reset your password: ${resetLink}`);
+
+    res.status(200).json({ message: 'Password reset link sent' });
+  }
+
+  /**
+ * Handles the reset of a user's password.
+ * @param {object} req - The request object from the client.
+ * @param {object} req.body - The body of the request.
+ * @param {string} req.body.newPassword - The new password to set for the user.
+ * @param {object} req.query - The query parameters of the request.
+ * @param {string} req.query.token - The JWT token for verifying the password reset request.
+ * @param {object} res - The response object to send the response.
+ * @param {function} next - The next middleware function in the stack.
+ * @returns {Promise<void>} - A promise that resolves when the password is successfully reset.
+ */
+  static async resetPassword(req, res, next) {
+    const { newPassword } = req.body;
+    const { token } = req.query;
+
+    if (!token) {
+      return next(new ApiError(400, 'Invalid Token', 'The token is required'));
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await this.mainDatamapper.findById(decoded.userId);
+    if (!user) {
+      return next(new ApiError(404, 'User not found', 'No user found with this ID'));
+    }
+    const saltRounds = parseInt(process.env.SALT_ROUNDS, 10);
+    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+    await this.mainDatamapper.updatePassword(user.id, hashedPassword);
+
+    res.status(200).json({ message: 'Password successfully reset' });
   }
 }

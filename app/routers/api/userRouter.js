@@ -7,6 +7,8 @@ import userUpdateSchema from '../../schemas/userUpdateSchema.js';
 import userLoginSchema from '../../schemas/userLoginSchema.js';
 import validateToken from '../../middlewares/authentification.js';
 import { loginLimiter } from '../../middlewares/rateLimit.js';
+import userEmailSchema from '../../schemas/userEmailSchema.js';
+import userPasswordSchema from '../../schemas/userPasswordSchema.js';
 
 const router = Router();
 
@@ -107,5 +109,32 @@ router.post('/login', loginLimiter, validator(userLoginSchema, 'body'), cw(userC
  * @return {object} 200 - OK - Successfully logged out
  */
 router.post('/logout', validateToken, cw(userController.logout.bind(userController)));
+
+/**
+ * POST /api/v1/requestReset
+ * @summary Request a password reset for a user
+ * @tags Auth
+ * @param {object} request.body.required - The email data - application/json
+ * @param {string} request.body.email - The email of the user
+ * @return {object} 200 - OK - Successfully sent reset password email
+ * @return {ApiJsonError} 400 - Bad Request - Invalid email format
+ * @return {ApiJsonError} 404 - Not Found - No user found with this email
+ * @return {ApiJsonError} 500 - Internal Server Error - Error while sending email
+ */
+router.post('/requestReset', validator(userEmailSchema, 'body'), cw(userController.requestResetPassword.bind(userController)));
+
+/**
+ * POST /api/v1/resetPassword
+ * @summary Reset the user's password
+ * @tags Auth
+ * @param {object} request.body.required - The reset password data - application/json
+ * @param {string} request.body.newPassword - The new password of the user
+ * @param {string} request.query.token - The JWT token for resetting the password
+ * @return {object} 200 - OK - Successfully reset the password
+ * @return {ApiJsonError} 400 - Bad Request - Invalid or expired token, or invalid password format
+ * @return {ApiJsonError} 404 - Not Found - No user found with this token
+ * @return {ApiJsonError} 500 - Internal Server Error - Error while resetting password
+ */
+router.post('/resetPassword', validator(userPasswordSchema, 'body'), cw(userController.resetPassword.bind(userController)));
 
 export default router;

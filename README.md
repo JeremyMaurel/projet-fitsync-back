@@ -42,6 +42,7 @@ psql -U nomDuLutilisateur -d nomDeLaBaseDeDonnes -f chemin/du/fichier.sql
 ```
 
 6. Copiez le fichier `.env.development.example` et renommez-le en `.env.development`. Modifiez les valeurs en fonction de votre environnement.
+   Pour utiliser les routes POST requestPassword et POST resetPassword, vous devrez configurer les valeurs correspondantes dans votre .env (vous pouvez utiliser Mailtrap, Gmail, MailGun ou encore SendGrid )
 
 7. Lancer l'Api: Démarrer l'application en mode développement :
 
