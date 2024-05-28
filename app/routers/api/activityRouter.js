@@ -11,18 +11,14 @@ const router = Router();
 
 /**
  * @typedef {object} Activity
- * @property {number} id - The ID of the activity
- * @property {string} name - The name of the activity
- * @property {number} met - The MET value of the activity
- * @property {number} category_id - The ID of the category this activity belongs to
- */
+ * @property {Data} data - The data of the activity
 
+ */
 /**
  * @typedef {object} ApiJsonError
  * @property {string} message - Error message
  * @property {string} [details] - Additional error details
  */
-
 /**
  * GET /api/v1/activities/{id}
  * @summary Get an activity by ID
@@ -38,13 +34,17 @@ router.get('/activities/:id', cw(ActivityController.getOne.bind(ActivityControll
 
 /**
  * @typedef {object} Data
- * @property {Activity} activity - an activity
- *
- */
+ * @property {number} id - The ID of the activity
+ * @property {string} name - The name of the activity
+ * @property {number} met - The MET value of the activity
+ * @property {number} category_id - The ID of the category this activity
+ * @property {timestamptz<string>} created_at - The creation date of the activity
+ * @property {timestamptz<string>} updated_at - The update date of the activity
+*/
 /**
  * @typedef {object} Activities
  * @property {number} total - total of activities
- * @property {Data} data - an array containing the activities
+ * @property {Data[]} data - an array containing the activities
  *
  */
 
@@ -62,9 +62,8 @@ router.get('/activities', cw(ActivityController.getAll.bind(ActivityController))
 
 /**
  * @typedef {object} newActivity
- * @property {string} name - The name of the activity
- * @property {number} met - The MET value of the activity
- * @property {number} category_id - The ID of the category this activity belongs to
+ * @property {Data} data - The data of the activity
+ *
  */
 
 /**
@@ -84,9 +83,7 @@ router.post('/activities', validateToken, isAdmin, validator(activityCreateSchem
 
 /**
  * @typedef {object} PatchActivity
- * @property {string} name - The name of the activity
- * @property {number} met - The MET value of the activity
- * @property {number} category_id - The ID of the category this activity belongs to
+ * @property {Data} data - The data of the activity
  */
 /**
  * PATCH api/v1/activities/{id}

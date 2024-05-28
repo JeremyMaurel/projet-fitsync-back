@@ -11,14 +11,6 @@ const router = Router();
  */
 
 /**
- * @typedef {object} Activity
- * @property {number} id - The ID of the activity
- * @property {string} name - The name of the activity
- * @property {number} met - The MET value of the activity
- * @property {number} category_id - The ID of the category this activity belongs to
- */
-
-/**
  * @typedef {object} CategoryWithActivities
  * @property {number} id - The ID of the category
  * @property {string} name - The name of the category
