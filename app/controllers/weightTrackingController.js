@@ -31,6 +31,6 @@ export default class WeightTrackingController extends CoreController {
     if (!userWeight) {
       return next(new ApiError(404, 'Error', 'Weight not found'));
     }
-    return res.json({ data: userWeight });
+    return res.json({ total: userWeight.length, data: userWeight });
   }
 }
