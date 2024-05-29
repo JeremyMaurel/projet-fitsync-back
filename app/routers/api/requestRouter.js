@@ -18,12 +18,6 @@ const router = Router();
  */
 
 /**
- * @typedef {object} ApiJsonError
- * @property {string} message - Error message
- * @property {string} [details] - Additional error details
- */
-
-/**
  * POST /api/v1/requests
  * @summary Create a new request.
  * @tags Requests

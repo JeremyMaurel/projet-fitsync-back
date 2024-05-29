@@ -26,12 +26,6 @@ const router = Router();
  */
 
 /**
- * @typedef {object} ApiJsonError
- * @property {string} message - Error message
- * @property {string} [details] - Additional error details
- */
-
-/**
  * GET /api/v1/user
  * @summary Get user details from JWT
  * @tags User

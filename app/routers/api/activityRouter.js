@@ -10,19 +10,43 @@ import isAdmin from '../../middlewares/adminAuth.js';
 const router = Router();
 
 /**
- * @typedef {object} Data
+ * @typedef {object} ActivitiesData
  * @property {number} id - The ID of the activity
  * @property {string} name - The name of the activity
  * @property {number} met - The MET value of the activity
- * @property {number} category_id - The ID of the category this activity
+ * @property {number} category_id - The ID of the category
  * @property {timestamptz<string>} created_at - The creation date of the activity
  * @property {timestamptz<string>} updated_at - The update date of the activity
 */
 /**
  * @typedef {object} Activities
- * @property {number} total - total of activities
- * @property {Data[]} data - an array containing the activities
+ * @property {number} total - Total of activities
+ * @property {ActivitiesData[]} data - An array containing the activities
  *
+ */
+/**
+ * @typedef {object} Activity
+ * @property {ActivitiesData[]} data - An array containing the activity
+ */
+/**
+ * @typedef {object} ApiJsonError
+ * @property {string} message - Error message
+ * @property {string[]} details - An array containing additional error details
+ */
+
+/**
+ * @typedef {object} newActivity
+ * @property {string} name - The name of the activity
+ * @property {number} met - The MET value of the activity
+ * @property {number} category_id - The ID of the category this activity
+ *
+ */
+
+/**
+ * @typedef {object} PatchActivity
+ * @property {string} name - The name of the activity
+ * @property {number} met - The MET value of the activity
+ * @property {number} category_id - The ID of the category this activity
  */
 
 /**
@@ -36,16 +60,7 @@ const router = Router();
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
 router.get('/activities', cw(ActivityController.getAll.bind(ActivityController)));
-/**
- * @typedef {object} Activity
- * @property {Data[]} data - The data of the activity
 
- */
-/**
- * @typedef {object} ApiJsonError
- * @property {string} message - Error message
- * @property {string} [details] - Additional error details
- */
 /**
  * GET /api/v1/activities/{id}
  * @summary Get an activity by ID
@@ -58,14 +73,6 @@ router.get('/activities', cw(ActivityController.getAll.bind(ActivityController))
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
 router.get('/activities/:id', cw(ActivityController.getOne.bind(ActivityController)));
-
-/**
- * @typedef {object} newActivity
- * @property {string} name - The name of the activity
- * @property {number} met - The MET value of the activity
- * @property {number} category_id - The ID of the category this activity
- *
- */
 
 /**
  * POST /api/v1/activities
@@ -82,12 +89,6 @@ router.get('/activities/:id', cw(ActivityController.getOne.bind(ActivityControll
  */
 router.post('/activities', validateToken, isAdmin, validator(activityCreateSchema, 'body'), cw(ActivityController.createActivityByCategoryId.bind(ActivityController)));
 
-/**
- * @typedef {object} PatchActivity
- * @property {string} name - The name of the activity
- * @property {number} met - The MET value of the activity
- * @property {number} category_id - The ID of the category this activity
- */
 /**
  * PATCH api/v1/activities/{id}
  * @summary Update a new activity

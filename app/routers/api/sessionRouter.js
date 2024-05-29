@@ -20,12 +20,6 @@ const router = Router();
  */
 
 /**
- * @typedef {object} ApiJsonError
- * @property {string} message - Error message
- * @property {string} [details] - Additional error details
- */
-
-/**
    * GET /api/v1/sessions-history/{id}
    * @summary Get a specific session with activities for a user
    * @tags History
