@@ -9,6 +9,7 @@ import requestRouter from './api/requestRouter.js';
 import messageRouter from './api/messageRouter.js';
 import weightTrackingRouter from './api/weightTrackingRouter.js';
 import error404 from '../middlewares/error404Handler.js';
+import docRouter from './api/apiDocRouter.js';
 
 const router = Router();
 
@@ -22,6 +23,7 @@ router.use(activityRouter);
 router.use(requestRouter);
 router.use(messageRouter);
 router.use(weightTrackingRouter);
+router.use(docRouter);
 
 // Use middleware to handle 404 errors if the requested route is not found
 router.use(error404);
