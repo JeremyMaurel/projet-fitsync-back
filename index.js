@@ -3,11 +3,10 @@ import debugMe from 'debug';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import express from 'express';
-import cors from 'cors';
 
 import path from 'path';
+import cors from 'cors';
 import { fileURLToPath } from 'url';
-
 import router from './app/routers/index.js';
 import bodySanitizer from './app/middlewares/bodySanitizer.js';
 import createDoc from './app/docs/swagger/apiDocs.js';
@@ -27,10 +26,12 @@ const PORT = process.env.PORT ?? 5000;
 
 const app = express();
 
-app.use(cors({ origin: process.env.CORS_ORIGIN, allowedHeaders: ['Content-Type', 'Authorization'] }));
-
 app.use(express.json());
 app.use(cookieParser());
+
+app.use(cors({
+  origin: process.env.CORS_ORIGIN, credentials: true, methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'], allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
 app.use(bodySanitizer);
 

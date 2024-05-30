@@ -3,8 +3,8 @@ import cw from '../../middlewares/controllerWrapper.js';
 import MessageController from '../../controllers/messageController.js';
 import messageCreateSchema from '../../schemas/messageCreateSchema.js';
 import validator from '../../schemas/middleware/validator.js';
-import validateToken from '../../middlewares/authentification.js';
 import isAdmin from '../../middlewares/adminAuth.js';
+import validateToken from '../../middlewares/authentification.js';
 
 const router = Router();
 

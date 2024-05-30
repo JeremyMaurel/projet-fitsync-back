@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import ActivityController from '../../controllers/activityController.js';
 import cw from '../../middlewares/controllerWrapper.js';
-import validateToken from '../../middlewares/authentification.js';
 import validator from '../../schemas/middleware/validator.js';
 import activityCreateSchema from '../../schemas/activityCreateSchema.js';
 import activityUpdateSchema from '../../schemas/activityUpdateSchema.js';
 import isAdmin from '../../middlewares/adminAuth.js';
+import validateToken from '../../middlewares/authentification.js';
 
 const router = Router();
 
