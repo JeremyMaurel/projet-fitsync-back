@@ -95,7 +95,7 @@ export default class UserController extends CoreController {
     );
 
     res.cookie('token', token, {
-      httpOnly: false,
+      httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'Strict',
       maxAge: 3600000,
