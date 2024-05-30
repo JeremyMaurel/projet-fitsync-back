@@ -22,6 +22,9 @@ const router = Router();
  * @property {ActivitiesData} data - The activity
  */
 /**
+ * @typedef {object} Void
+ */
+/**
  * @typedef {object} ApiJsonError
  * @property {string} message - Error message
  * @property {string[]} details - An array containing additional error details
@@ -97,7 +100,7 @@ const router = Router();
  * @tags Activities
  * @security BearerAuth
  * @param {number} id.path.required - The ID of the activity to delete
- * @return {void} 204 - No Content  Successfully deleted the activity
+ * @return {Void} 204 - No Content  Successfully deleted the activity
  * @return {ApiJsonError} 401 - Unauthorized:- Invalid or missing token
  * @return {ApiJsonError} 404 - Not Found - Activity entry not found
  * @return {ApiJsonError} 500 - Internal Server Error - Unexpected error
@@ -162,7 +165,7 @@ const router = Router();
  * @security BearerAuth
  * @param {number} userId.number.required - The ID of the user
  * @param {number} activityId.number.required - The ID of the activity to be deleted
- * @return {void} 204 - No Content Successfully deleted the favorite entry
+ * @return {Void} 204 - No Content Successfully deleted the favorite entry
  * @return {ApiJsonError} 401 - Unauthorized - JWT not provided or invalid - application/json
  * @return {ApiJsonError} 404 - Not Found - Favorite entry not found
  * @return {ApiJsonError} 500 - Internal Server Error - Unexpected error
@@ -271,7 +274,7 @@ const router = Router();
  * @param {number} id.path.required - The ID ot the message to delete
  * @param {number} userId.cookie.required - The ID of the user
  * @param {string} userRole.cookie.required - The role of the user
- * @return {void} 204 - No Content Successfully deleted the account
+ * @return {Void} 204 - No Content Successfully deleted the account
  * @return {ApiJsonError} 404 - Not Found - application/json
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
@@ -368,7 +371,7 @@ const router = Router();
  * @param {number} userId.cookie.required - The ID of the user
  * @param {string} userRole.cookie.required - The role of the user
  * @param {number} id.path.required - The ID of the request to delete
- * @return {void} 204 - No Content Successfully deleted the account
+ * @return {Void} 204 - No Content Successfully deleted the account
  * @return {ApiJsonError} 404 - Not Found - application/json
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
@@ -459,7 +462,7 @@ const router = Router();
    * @security BearerAuth
    * @param {number} userId.cookie.required - The ID of the user
    * @param {number} id.path.required - The ID of the session to retrieve
-   * @return {void} 204 - No Content - Successfully deleted the session
+   * @return {Void} 204 - No Content - Successfully deleted the session
    * @return {ApiJsonError} 401 - Unauthorized - Invalid or missing token
    * @return {ApiJsonError} 404 - Not Found - Session entry not found
    * @return {ApiJsonError} 500 - Internal Server Error - Unexpected error
@@ -547,7 +550,7 @@ const router = Router();
  * @tags Users
  * @security BearerAuth
  * @param {number} userId.cookie.required - The ID of the user
- * @return {void} 204 - No Content Successfully deleted the account
+ * @return {Void} 204 - No Content Successfully deleted the account
  * @return {ApiJsonError} 404 - Not Found - application/json
  * @return {ApiJsonError} 500 - Internal Server Error - application/json
  */
@@ -640,7 +643,7 @@ const router = Router();
  * @summary Log out a user by clearing the JWT cookie
  * @tags Auth
  * @security BearerAuth
- * @return {void} 200 - OK Successfully logged out
+ * @return {Void} 200 - OK Successfully logged out
  */
 /**
  * @typedef {object} requestResetBody
@@ -743,7 +746,7 @@ const router = Router();
    * @security BearerAuth
    * @param {number} userId.cookie.required - The ID of the user
    * @param {number} id.path.required - The ID of the userWeight
-   * @return {void} 204 - No Content Successfully deleted the user weight
+   * @return {Void} 204 - No Content Successfully deleted the user weight
    * @return {ApiJsonError} 401 - Unauthorized - Invalid or missing token
    * @return {ApiJsonError} 404 - Not Found - Session entry not found
    * @return {ApiJsonError} 500 - Internal Server Error - Unexpected error
