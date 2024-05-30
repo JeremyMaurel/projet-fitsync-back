@@ -624,7 +624,6 @@ const router = Router();
 /**
  * @typedef {object} userLoggedResponse
  * @property {string} message - Login message
- * @property {string} token - User's token
  */
 /**
  * POST /api/v1/login
