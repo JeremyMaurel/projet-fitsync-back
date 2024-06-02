@@ -48,8 +48,8 @@ export default class ActivityController extends CoreController {
       input.category_id = input.categoryId;
       delete input.categoryId;
     }
-
-    const newActivity = await this.mainDatamapper.update(id, input);
-    return res.status(201).json({ data: newActivity });
+    input.updated_at = new Date().toISOString();
+    const updatedActivity = await this.mainDatamapper.update(id, input);
+    return res.status(201).json({ data: updatedActivity });
   }
 }

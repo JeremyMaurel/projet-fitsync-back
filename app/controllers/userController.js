@@ -148,6 +148,8 @@ export default class UserController extends CoreController {
       input.password = hashedPassword;
     }
 
+    input.updated_at = new Date().toISOString();
+
     const updatedUser = await this.mainDatamapper.update(userId, input);
     if (!updatedUser) {
       return next(new ApiError(404, 'Api Error', `${this.entityName} not found`));
