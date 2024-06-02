@@ -113,11 +113,12 @@ export default class SessionController extends CoreController {
       input.activity_id = input.activityId;
       delete input.activityId;
     }
+    input.updated_at = new Date().toISOString();
 
-    const row = await this.mainDatamapper.updateSessionByUserId(id, input, userId);
-    if (!row) {
+    const updatedSession = await this.mainDatamapper.updateSessionByUserId(id, input, userId);
+    if (!updatedSession) {
       return next(new ApiError(404, 'Api Error', `${this.entityName} not found`));
     }
-    return res.json({ data: row });
+    return res.json({ data: updatedSession });
   }
 }
