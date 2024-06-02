@@ -27,6 +27,7 @@ export default class UserController extends CoreController {
     if (!user) {
       return next(new ApiError(404, 'Error', 'User not found'));
     }
+    delete user.password;
     return res.json({ data: user });
   }
 
@@ -147,11 +148,12 @@ export default class UserController extends CoreController {
       input.password = hashedPassword;
     }
 
-    const row = await this.mainDatamapper.update(userId, input);
-    if (!row) {
+    const updatedUser = await this.mainDatamapper.update(userId, input);
+    if (!updatedUser) {
       return next(new ApiError(404, 'Api Error', `${this.entityName} not found`));
     }
-    return res.json({ data: row });
+    delete updatedUser.password;
+    return res.json({ data: updatedUser });
   }
 
   /**
