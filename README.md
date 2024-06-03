@@ -67,3 +67,11 @@ npx jsdoc -c jsdoc.json
 
 Se rendre sur localhost:PORT/api-docs.
 Pour les routes protégées, il faut générer un token (Insomnia, Curl etc) et le copier dans l'encart Authorize.
+ 
+10. Gestion des tests unitaires
+```sh
+#installer jest si ce n'est pas déjà le cas
+npm install --save-dev @jest/globals
+#Comme on est en ECM6, lancer cette commande au lieu de passer par 'npm test' (sinon erreur au niveau des modules)
+node --experimental-vm-modules node_modules/jest/bin/jest.js
+```
