@@ -100,7 +100,7 @@ export default class UserController extends CoreController {
       maxAge: 3600000,
     });
 
-    res.status(200).json({ message: 'Login successful' });
+    res.status(200).json({ message: 'Login successful', role: user.role });
   }
 
   /**
