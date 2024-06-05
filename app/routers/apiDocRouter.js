@@ -12,7 +12,7 @@ const router = Router();
  * @property {timestamptz<string>} updated_at - The update date of the activity
 */
 /**
- * @typedef {object} Activitie
+ * @typedef {object} Activities
  * @property {number} total - Total of activities
  * @property {ActivitiesData[]} data - An array containing the activities
  *
@@ -591,7 +591,6 @@ const router = Router();
  * @property {string} mail - The user email
  * @property {string} pseudo - The user pseudo
  * @property {string} role - The user role
- * @property {string} password - The user password
  * @property {timestamptz<string>} birthdate - The user birthdate in the format 'YYYY-MM-DD'
  * @property {string} gender - The user gender (e.g., 'male', 'female', 'other')
  * @property {number} height - The user height in centimeters

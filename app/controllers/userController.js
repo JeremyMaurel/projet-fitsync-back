@@ -64,6 +64,7 @@ export default class UserController extends CoreController {
     const newUser = await this.mainDatamapper.create({
       mail, pseudo, password: `${hashedPassword}`,
     });
+    delete newUser.password;
     res.status(201).json(newUser);
   }
 
