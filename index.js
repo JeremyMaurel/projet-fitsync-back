@@ -12,6 +12,7 @@ import bodySanitizer from './app/middlewares/bodySanitizer.js';
 import createDoc from './app/docs/swagger/apiDocs.js';
 import { globalLimiter } from './app/middlewares/rateLimit.js';
 import errorHandler from './app/middlewares/errorHandler.js';
+import error404 from './app/middlewares/error404Handler.js';
 
 // These lines and their imports configure the environment
 // (dev or prod) as specified in the package.json
@@ -47,6 +48,7 @@ app.use(globalLimiter);
 createDoc(app);
 
 app.use('/api/v1', router);
+app.use(error404);
 
 // Use the error handling middleware to display error messages in a
 // specific format if any errors occur
