@@ -182,7 +182,7 @@ export default class UserController extends CoreController {
       { expiresIn: '1h' },
     );
 
-    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password/new?token=${resetToken}`;
 
     await sendEmail(user.mail, 'Password Reset', `Click the link to reset your password: ${resetLink}`);
 
